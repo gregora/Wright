@@ -2,47 +2,7 @@ import numpy as np
 from math import cos, sin, pi
 import matplotlib.pyplot as plt
 
-def getR(attitude):
-    # Returns the rotation matrix from the euler angles
-
-    roll = attitude[0, 0]
-    pitch = attitude[1, 0]
-    yaw = attitude[2, 0]
-
-    R1 = np.array([[1, 0, 0],
-                   [0, cos(roll), -sin(roll)],
-                   [0, sin(roll), cos(roll)]])
-
-    R2 = np.array([[cos(pitch), 0, sin(pitch)],
-                    [0, 1, 0],
-                    [-sin(pitch), 0, cos(pitch)]])
-
-    R3 = np.array([[cos(yaw), -sin(yaw), 0],
-                     [sin(yaw), cos(yaw), 0],
-                     [0, 0, 1]])
-
-    R = R1 @ R2 @ R3
-
-    return R
-
-def symetricC(alpha):
-    Cl = alpha / 10 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
-
-    return Cl, Cd
-
-def positiveC(alpha):
-    Cl = 0.2 + alpha / 10 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
-
-    return Cl, Cd
-
-def negativeC(alpha):
-    Cl = -0.2 - alpha / 10 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
-
-    return Cl, Cd
-
+from misc import *
 
 x_i = np.zeros((3, 1)) # inertial position
 attitude = np.zeros((3, 1)) # attitude as euler angles (Roll - Pitch - Yaw)
@@ -212,12 +172,33 @@ for i in range(10):
 
         torque_b += np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
 
+        print()
+
     print(f"Force B: {force_b}")
     print(f"Torque B: {torque_b}")
 
 
     g_b = R @ g_i
 
+    a_b = force_b / m + g_b
+    alpha_b = np.linalg.inv(I) @ torque_b
+
+    v_b += a_b * dt
+    w_b += alpha_b * dt
 
 
-    break
+    v_i = R.T @ v_b
+    w_i = R.T @ w_b
+
+    print(f"Velocity: {v_i}")
+    print(f"Angular Velocity: {w_i}")
+
+    x_i += v_i * dt
+    attitude += getdEul(attitude, w_b) * dt
+
+    print(f"Position: {x_i}")
+    print(f"Attitude: {attitude}")
+    
+
+
+
