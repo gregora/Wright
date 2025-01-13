@@ -110,6 +110,16 @@ masses = [
         "Mass": 0.038
     },
     {
+        "Name": "Flight Controller",
+        "Position": np.array([[-0.30], [0], [0]]),
+        "Mass": 0.07
+    },
+    {
+        "Name": "Receiver",
+        "Position": np.array([[0.25], [0], [0]]),
+        "Mass": 0.02
+    },
+    {
         "Name": "Left Wing",
         "Position": np.array([[0], [-0.5], [0]]),
         "Mass": 0.2
@@ -208,6 +218,6 @@ for i in range(10):
 
     g_b = R @ g_i
 
-    
+
 
     break
