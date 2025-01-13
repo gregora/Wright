@@ -54,7 +54,7 @@ w_i = np.zeros((3, 1)) # inertial angular velocities
 dt = 0.01
 
 v_i[0, 0] = 10
-attitude[1, 0] = 0
+attitude[1, 0] = -0.1
 w_i[0, 0] = -0.0
 
 
@@ -99,8 +99,8 @@ for i in range(10):
     w_b = R.T @ w_i
 
 
-    torque = np.array([[0], [0], [0]])
-    force = np.array([[0], [0], [0]])
+    torque = np.array([[0.0], [0.0], [0.0]])
+    force = np.array([[0.0], [0.0], [0.0]])
 
     for surface in surfaces:
 
@@ -132,8 +132,18 @@ for i in range(10):
 
         print(f"Lift: {lift}")
         print(f"Drag: {drag}")
- 
 
+        drag_vector = - np.array([[ cos(alpha_s)], [0], [sin(alpha_s)]]) * drag
+        lift_vector = - np.array([[sin(alpha_s)], [0], [cos(alpha_s)]]) * lift
 
+        print(f"Drag Vector: {drag_vector}")
+        print(f"Lift Vector: {lift_vector}")
 
-    break
+        force += drag_vector + lift_vector
+
+        torque += np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
+
+        print("\n")
+
+    print(f"Force: {force}")
+    print(f"Torque: {torque}")
