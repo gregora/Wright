@@ -1,5 +1,6 @@
 import numpy as np
-from math import cos, sin
+from math import cos, sin, pi
+import matplotlib.pyplot as plt
 
 def getR(attitude):
     # Returns the rotation matrix from the euler angles
@@ -24,6 +25,24 @@ def getR(attitude):
 
     return R
 
+def symetricC(alpha):
+    Cl = alpha / 10 * 180 / pi
+    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+    return Cl, Cd
+
+def positiveC(alpha):
+    Cl = 0.2 + alpha / 10 * 180 / pi
+    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+    return Cl, Cd
+
+def negativeC(alpha):
+    Cl = -0.2 - alpha / 10 * 180 / pi
+    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+    return Cl, Cd
+
 
 x_i = np.zeros((3, 1)) # inertial position
 attitude = np.zeros((3, 1)) # attitude as euler angles (Roll - Pitch - Yaw)
@@ -36,7 +55,7 @@ dt = 0.01
 
 v_i[0, 0] = 10
 attitude[1, 0] = 0
-w_i[0, 0] = 0.3
+w_i[0, 0] = -0.0
 
 
 surfaces = [
@@ -80,8 +99,8 @@ for i in range(10):
     w_b = R.T @ w_i
 
 
-    #alpha = -np.arctan2(v_b[2, 0], v_b[0, 0])
-    #beta = np.arctan2(v_b[1, 0], v_b[0, 0])
+    torque = np.array([[0], [0], [0]])
+    force = np.array([[0], [0], [0]])
 
     for surface in surfaces:
 
@@ -90,6 +109,7 @@ for i in range(10):
         v_s = np.array([[v_s[0]], [v_s[1]], [v_s[2]]])
         v_s = - v_s + v_b
 
+        # from surface velocity calculate local alpha and beta
         alpha_s = -np.arctan2(v_s[2, 0], v_s[0, 0])
         beta_s = np.arctan2(v_s[1, 0], v_s[0, 0])
 
@@ -97,8 +117,22 @@ for i in range(10):
         print(f"Alpha: {alpha_s}")
         print(f"Beta: {beta_s}")
 
+        if surface["Vertical"]:
+            alpha_s, beta_s = beta_s, alpha_s
 
+        if surface["Type"] == "Symetric":
+            Cl, Cd = symetricC(alpha_s)
+        elif surface["Type"] == "Positive":
+            Cl, Cd = positiveC(alpha_s)
+        elif surface["Type"] == "Negative":
+            Cl, Cd = negativeC(alpha_s)
 
+        lift = 0.5 * 1.225 * v_s[0, 0]**2 * surface["Area"] * Cl
+        drag = 0.5 * 1.225 * v_s[0, 0]**2 * surface["Area"] * Cd
+
+        print(f"Lift: {lift}")
+        print(f"Drag: {drag}")
+ 
 
 
 
