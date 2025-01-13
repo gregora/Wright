@@ -51,11 +51,14 @@ v_i = np.zeros((3, 1)) # inertial velocities
 w_i = np.zeros((3, 1)) # inertial angular velocities
 
 
+g_i = np.array([[0], [0], [9.81]]) # gravity vector in inertial frame
+
+
 dt = 0.01
 
 v_i[0, 0] = 10
-attitude[1, 0] = -0.1
-w_i[0, 0] = -0.0
+attitude[1, 0] = 0.1
+w_i[0, 0] = -0.01
 
 
 surfaces = [
@@ -90,17 +93,73 @@ surfaces = [
 ]
 
 
+masses = [
+    {
+        "Name": "Battery",
+        "Position": np.array([[0.25], [0], [0]]),
+        "Mass": 0.147
+    },
+    {
+        "Name": "Motor",
+        "Position": np.array([[0.35], [0], [0]]),
+        "Mass": 0.064
+    },
+    {
+        "Name": "ESC",
+        "Position": np.array([[0.25], [0], [0]]),
+        "Mass": 0.038
+    },
+    {
+        "Name": "Left Wing",
+        "Position": np.array([[0], [-0.5], [0]]),
+        "Mass": 0.2
+    },
+    {
+        "Name": "Right Wing",
+        "Position": np.array([[0], [0.5], [0]]),
+        "Mass": 0.2
+    },
+    {
+        "Name": "Horizontal Stabilizer",
+        "Position": np.array([[-0.5], [0], [0]]),
+        "Mass": 0.05
+    },
+    {
+        "Name": "Vertical Stabilizer",
+        "Position": np.array([[-0.5], [0], [0.2]]),
+        "Mass": 0.05
+    },
+    {
+        "Name": "Fuselage",
+        "Position": np.array([[0], [0], [0]]),
+        "Mass": 0.3
+    }
+]
+
+
+m = 0 # total mass
+I = np.zeros((3, 3)) # total inertia matrix
+
+for mass in masses:
+    m += mass["Mass"]
+
+    I += mass["Mass"] * np.array([[mass["Position"][1, 0]**2 + mass["Position"][2, 0]**2, -mass["Position"][0, 0] * mass["Position"][1, 0], -mass["Position"][0, 0] * mass["Position"][2, 0]],
+                                  [-mass["Position"][0, 0] * mass["Position"][1, 0], mass["Position"][0, 0]**2 + mass["Position"][2, 0]**2, -mass["Position"][1, 0] * mass["Position"][2, 0]],
+                                  [-mass["Position"][0, 0] * mass["Position"][2, 0], -mass["Position"][1, 0] * mass["Position"][2, 0], mass["Position"][0, 0]**2 + mass["Position"][1, 0]**2]])
+
+print(f"Total Mass: {m}")
+print(f"Total Inertia: {I}")
+
 
 for i in range(10):
 
     R = getR(attitude)
 
-    v_b = R.T @ v_i
-    w_b = R.T @ w_i
+    v_b = R @ v_i
+    w_b = R @ w_i
 
-
-    torque = np.array([[0.0], [0.0], [0.0]])
-    force = np.array([[0.0], [0.0], [0.0]])
+    torque_b = np.array([[0.0], [0.0], [0.0]])
+    force_b = np.array([[0.0], [0.0], [0.0]])
 
     for surface in surfaces:
 
@@ -139,11 +198,16 @@ for i in range(10):
         print(f"Drag Vector: {drag_vector}")
         print(f"Lift Vector: {lift_vector}")
 
-        force += drag_vector + lift_vector
+        force_b += drag_vector + lift_vector
 
-        torque += np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
+        torque_b += np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
 
-        print("\n")
+    print(f"Force B: {force_b}")
+    print(f"Torque B: {torque_b}")
 
-    print(f"Force: {force}")
-    print(f"Torque: {torque}")
+
+    g_b = R @ g_i
+
+    
+
+    break
