@@ -42,19 +42,19 @@ def getdEul(attitude, w_b):
     return dEul
 
 def symetricC(alpha):
-    Cl = 0.5 * alpha / 10 * 180 / pi
+    Cl = 0.5 * alpha / 5 * 180 / pi
     Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
 
     return Cl, Cd
 
 def positiveC(alpha):
-    Cl = 0.2 + 0.5 * alpha / 10 * 180 / pi
+    Cl = 0.2 + 0.5 * alpha / 5 * 180 / pi
     Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
 
     return Cl, Cd
 
 def negativeC(alpha):
-    Cl = -0.2 + 0.5 * alpha / 10 * 180 / pi
+    Cl = -0.2 + 0.5 * alpha / 5 * 180 / pi
     Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
 
     return Cl, Cd
