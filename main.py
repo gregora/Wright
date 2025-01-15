@@ -50,17 +50,17 @@ surfaces = [
 masses = [
     {
         "Name": "Battery",
-        "Position": np.array([[0.15], [0], [0]]),
+        "Position": np.array([[0.15], [0], [0.03]]),
         "Mass": 0.147
     },
     {
         "Name": "Motor",
-        "Position": np.array([[0.35], [0], [0]]),
+        "Position": np.array([[0.35], [0], [-0.02]]),
         "Mass": 0.064
     },
     {
         "Name": "ESC",
-        "Position": np.array([[0.25], [0], [0]]),
+        "Position": np.array([[0.25], [0], [-0.04]]),
         "Mass": 0.038
     },
     {
@@ -95,7 +95,7 @@ masses = [
     },
     {
         "Name": "Fuselage",
-        "Position": np.array([[0], [0], [0]]),
+        "Position": np.array([[0], [0], [0.1]]),
         "Mass": 0.1
     },
     {
@@ -138,9 +138,8 @@ velocities = []
 v_i[0, 0] = 10
 
 
-attitude[1, 0] = 0.1
-#attitude[2, 0] = 0.1
-
+attitude[1, 0] = 0.0
+attitude[2, 0] = 0.1
 
 
 print(cm)
@@ -148,7 +147,7 @@ dt = 0.01
 
 
 
-for i in range(5000):
+for i in range(500):
 
     #v_i[0, 0] = 15
     #v_i[1, 0] = 0
@@ -171,7 +170,7 @@ for i in range(5000):
         # calculate surface velocity
         v_s = np.cross(w_b[:, 0], surface["Position"][:, 0])
         v_s = np.array([[v_s[0]], [v_s[1]], [v_s[2]]])
-        v_s = - v_s + v_b
+        v_s = v_s + v_b
 
         # from surface velocity calculate local alpha and beta
         alpha_s = np.arctan2(v_s[2, 0], v_s[0, 0])
