@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from misc import *
 
+import tqdm
+
 x_i = np.zeros((3, 1)) # inertial position
 attitude = np.zeros((3, 1)) # attitude as euler angles (Roll - Pitch - Yaw)
 
@@ -137,17 +139,16 @@ velocities = []
 
 v_i[0, 0] = 10
 
-
-attitude[1, 0] = 0.0
+attitude[1, 0] = -0.06
 attitude[2, 0] = 0.1
 
 
 print(cm)
-dt = 0.01
+dt = 0.001
 
+N = 60000
 
-
-for i in range(500):
+for i in tqdm.tqdm(range(N)):
 
     #v_i[0, 0] = 15
     #v_i[1, 0] = 0
@@ -207,6 +208,7 @@ for i in range(500):
         
         torque_b += torque_s
 
+        """
         print(f"Surface: {surface['Name']}")
         print(f"Alpha: {alpha_s}")
         print(f"Beta: {beta_s}")
@@ -221,15 +223,13 @@ for i in range(500):
         print(f"Torque: {torque_s}")
 
         print()
-
+        """
 
 
 
     g_b = R.T @ g_i
     torque_b += np.array([np.cross(cm[:, 0], m * g_b[:, 0])]).T
 
-    print(f"Gravity: {g_b}")
-    print(f"Gravity Torque: {np.array([np.cross(cm[:, 0], m * g_b[:, 0])]).T}")
 
 
     force_b += m * g_b
@@ -253,11 +253,15 @@ for i in range(500):
     x_i += v_i * dt
     attitude += getdEul(attitude, w_i) * dt
 
+    """
+    print(f"Gravity: {g_b}")
+    print(f"Gravity Torque: {np.array([np.cross(cm[:, 0], m * g_b[:, 0])]).T}")
     
     print(f"Force i: {force_i}")
     print(f"Torque i: {torque_i}")
     print()
     print()
+    """
 
     attitudes.append(attitude.copy())
     positions.append(x_i.copy())
@@ -267,29 +271,29 @@ attitudes = np.array(attitudes)
 positions = np.array(positions)
 velocities = np.array(velocities)
 
-
+T = np.linspace(0, dt*N, N)
 
 plt.subplot(2, 2, 1)
 
-plt.plot(attitudes[:, 0], label="Roll")
-plt.plot(attitudes[:, 1], label="Pitch")
-plt.plot(attitudes[:, 2], label="Yaw")
+plt.plot(T, attitudes[:, 0], label="Roll")
+plt.plot(T, attitudes[:, 1], label="Pitch")
+plt.plot(T, attitudes[:, 2], label="Yaw")
 
 plt.legend()
 
 plt.subplot(2, 2, 2)
 
-plt.plot(positions[:, 0], label="X")
-plt.plot(positions[:, 1], label="Y")
-plt.plot(positions[:, 2], label="Z")
+plt.plot(T, positions[:, 0], label="X")
+plt.plot(T, positions[:, 1], label="Y")
+plt.plot(T, positions[:, 2], label="Z")
 
 plt.legend()
 
 plt.subplot(2, 2, 3)
 
-plt.plot(velocities[:, 0], label="Vx")
-plt.plot(velocities[:, 1], label="Vy")
-plt.plot(velocities[:, 2], label="Vz")
+plt.plot(T, velocities[:, 0], label="Vx")
+plt.plot(T, velocities[:, 1], label="Vy")
+plt.plot(T, velocities[:, 2], label="Vz")
 
 plt.legend()
 
