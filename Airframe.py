@@ -3,6 +3,8 @@ from math import cos, sin, pi
 
 from misc import *
 
+import json
+
 
 class Airframe:
     x_i = np.zeros((3, 1)) # inertial position
@@ -157,3 +159,18 @@ class Airframe:
             print()
             """
 
+    def from_json(file):
+        with open(file, 'r') as f:
+            data = json.load(f)
+
+        
+        surfaces = data["Surfaces"]
+        masses = data["Masses"]
+
+        for s in surfaces:
+            s["Position"] = np.array(s["Position"])
+        
+        for m in masses:
+            m["Position"] = np.array(m["Position"])
+
+        return Airframe(surfaces, masses)

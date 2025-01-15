@@ -1,0 +1,89 @@
+{
+    "Surfaces": [
+        {
+            "Name": "Left Wing",
+            "Position": [[0], [-0.5], [0]],
+            "Area": 0.0576,
+            "Type": "Positive",
+            "Vertical": false
+        },
+        {
+            "Name": "Right Wing",
+            "Position": [[0], [0.5], [0]],
+            "Area": 0.0576,
+            "Type": "Positive",
+            "Vertical": false
+        },
+        {
+            "Name": "Horizontal Stabilizer",
+            "Position": [[-0.5], [0], [0]],
+            "Area": 0.03,
+            "Type": "Negative",
+            "Vertical": false
+        },
+        {
+            "Name": "Vertical Stabilizer",
+            "Position": [[-0.5], [0], [-0.2]],
+            "Area": 0.0075,
+            "Type": "Symetric",
+            "Vertical": true
+        }
+    ],
+    "Masses": [
+        {
+            "Name": "Battery",
+            "Position": [[0.15], [0], [0.03]],
+            "Mass": 0.147
+        },
+        {
+            "Name": "Motor",
+            "Position": [[0.35], [0], [-0.02]],
+            "Mass": 0.064
+        },
+        {
+            "Name": "ESC",
+            "Position": [[0.25], [0], [-0.04]],
+            "Mass": 0.038
+        },
+        {
+            "Name": "Flight Controller",
+            "Position": [[-0.30], [0], [0]],
+            "Mass": 0.07
+        },
+        {
+            "Name": "Receiver",
+            "Position": [[0.0], [0], [0]],
+            "Mass": 0.02
+        },
+        {
+            "Name": "Left Wing",
+            "Position": [[0], [-0.5], [0]],
+            "Mass": 0.01
+        },
+        {
+            "Name": "Right Wing",
+            "Position": [[0], [0.5], [0]],
+            "Mass": 0.01
+        },
+        {
+            "Name": "Horizontal Stabilizer",
+            "Position": [[-0.5], [0], [0]],
+            "Mass": 0.03
+        },
+        {
+            "Name": "Vertical Stabilizer",
+            "Position": [[-0.5], [0], [-0.2]],
+            "Mass": 0.03
+        },
+        {
+            "Name": "Fuselage",
+            "Position": [[0], [0], [0.1]],
+            "Mass": 0.1
+        },
+        {
+            "Name": "Nose",
+            "Position": [[0.5], [0], [0]],
+            "Mass": 0.000
+        }
+    ]
+}
