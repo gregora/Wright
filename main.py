@@ -33,14 +33,14 @@ surfaces = [
     {
         "Name": "Horizontal Stabilizer",
         "Position": np.array([[-0.5], [0], [0]]),
-        "Area": 0.01,
+        "Area": 0.03,
         "Type": "Negative",
         "Vertical": False
     },
     {
         "Name": "Vertical Stabilizer",
-        "Position": np.array([[-0.5], [0], [0.2]]),
-        "Area": 0.01,
+        "Position": np.array([[-0.5], [0], [-0.2]]),
+        "Area": 0.0075,
         "Type": "Symetric",
         "Vertical": True
     }
@@ -90,7 +90,7 @@ masses = [
     },
     {
         "Name": "Vertical Stabilizer",
-        "Position": np.array([[-0.5], [0], [0.2]]),
+        "Position": np.array([[-0.5], [0], [-0.2]]),
         "Mass": 0.03
     },
     {
@@ -101,7 +101,7 @@ masses = [
     {
         "Name": "Nose",
         "Position": np.array([[0.5], [0], [0]]),
-        "Mass": 0.0
+        "Mass": 0.000
     }
 ]
 
@@ -136,8 +136,11 @@ velocities = []
 
 
 v_i[0, 0] = 10
+
+
 attitude[1, 0] = 0.1
-w_i[0, 0] = 0
+#attitude[2, 0] = 0.1
+
 
 
 print(cm)
@@ -145,7 +148,7 @@ dt = 0.01
 
 
 
-for i in range(2000):
+for i in range(5000):
 
     #v_i[0, 0] = 15
     #v_i[1, 0] = 0
@@ -155,6 +158,8 @@ for i in range(2000):
 
     #exit()
 
+    # THIS HAS TO BE R.T BECAUSE YOU NEED TO CALCULATE HOW VECTOR WOULD LOOK IN BODY FRAME
+    # NOT HOW TO TRANSFORM THE VECTOR FROM INERTIAL TO BODY FRAME
     v_b = R.T @ v_i
     w_b = R.T @ w_i
 
@@ -234,11 +239,12 @@ for i in range(2000):
     force_i = R @ force_b
     torque_i = R @ torque_b
 
-    I_c = R @ I @ R.T
+    I_c = R @ I @ R.T # first calculate where vector would be in body frame, multiply by I and transform back
     L_c = I_c @ w_i
-    alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(w_i[:, 0], L_c[:, 0])]).T)
-    a_i = force_i / m
 
+    # torque_b or torque_i?
+    alpha_i = np.linalg.inv(I_c) @ (torque_b - np.array([np.cross(w_i[:, 0], L_c[:, 0])]).T)
+    a_i = force_i / m
 
 
     v_i += a_i * dt
