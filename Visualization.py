@@ -53,7 +53,7 @@ class Visualization:
 
         glRotate(euler[0], 1, 0, 0)
         glRotate(euler[1], 0, 1, 0)
-        glRotate(euler[2], 0, 0, 1)
+        glRotate(-euler[2], 0, 0, 1)
 
         glRotate(self.camera_pos[0], 0, 0, 1)
         glRotate(self.camera_pos[1], 1, 0, 0)

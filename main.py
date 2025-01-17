@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from misc import *
 
+import time
+
 import tqdm
 
 from Airframe import Airframe
@@ -21,7 +23,7 @@ velocities = []
 airframe.v_i[0, 0] = 10
 
 
-airframe.attitude[0, 0] = 0.1
+airframe.attitude[0, 0] = 0.3
 airframe.attitude[1, 0] = -0.06
 airframe.attitude[2, 0] = 0.0
 
@@ -41,8 +43,9 @@ for i in tqdm.tqdm(range(N)):
     positions.append(airframe.x_i.copy())
     velocities.append(airframe.v_i.copy())
 
-    if i % 100 == 0:
+    if i % 10 == 0:
         visualization.update(i*dt, attitudes[-1]*180/pi)
+        time.sleep(0.005)
 
 visualization.close()
 
