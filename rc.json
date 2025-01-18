@@ -32,6 +32,14 @@
             "Angle": 0.0,
             "Vertical": true
         },
+        {
+            "Name": "Fuselage",
+            "Position": [[0], [0], [0.035]],
+            "Area": 0.049,
+            "Type": "Symetric",
+            "Angle": 0.0,
+            "Vertical": false
+        },
 
 
 

@@ -55,23 +55,23 @@ for i in tqdm.tqdm(range(N)):
 
         # left arrow
         if pygame.key.get_pressed()[pygame.K_LEFT]:
-            airframe.surfaces[4]["Angle"] = -0.35
-            airframe.surfaces[5]["Angle"] = 0.35
+            airframe.surfaces[5]["Angle"] = -0.35
+            airframe.surfaces[6]["Angle"] = 0.35
         # right arrow
         elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-            airframe.surfaces[4]["Angle"] = 0.35
-            airframe.surfaces[5]["Angle"] = -0.35
+            airframe.surfaces[5]["Angle"] = 0.35
+            airframe.surfaces[6]["Angle"] = -0.35
         else:
-            airframe.surfaces[4]["Angle"] = 0
             airframe.surfaces[5]["Angle"] = 0
+            airframe.surfaces[6]["Angle"] = 0
 
         # up arrow
         if pygame.key.get_pressed()[pygame.K_UP]:
-            airframe.surfaces[6]["Angle"] = 0.35
+            airframe.surfaces[7]["Angle"] = 0.35
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
-            airframe.surfaces[6]["Angle"] = -0.35
+            airframe.surfaces[7]["Angle"] = -0.35
         else:
-            airframe.surfaces[6]["Angle"] = 0
+            airframe.surfaces[7]["Angle"] = 0
 
 visualization.close()
 
