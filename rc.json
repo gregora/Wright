@@ -17,14 +17,14 @@
         {
             "Name": "Horizontal Stabilizer",
             "Position": [[-0.5], [0], [0]],
-            "Area": 0.03,
+            "Area": 0.003,
             "Type": "Negative",
             "Vertical": false
         },
         {
             "Name": "Vertical Stabilizer",
             "Position": [[-0.5], [0], [-0.2]],
-            "Area": 0.0075,
+            "Area": 0.003,
             "Type": "Symetric",
             "Vertical": true
         }
