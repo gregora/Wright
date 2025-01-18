@@ -12,7 +12,7 @@ from Airframe import Airframe
 from Visualization import Visualization
 
 airframe = Airframe.from_json("rc.json")
-visualization = Visualization(record=True, fps=100)
+visualization = Visualization(record=False, fps=100)
 
 attitudes = []
 positions = []
@@ -20,10 +20,10 @@ positions = []
 velocities = []
 
 
-airframe.v_i[0, 0] = 10
+airframe.v_i[0, 0] = 5
 
 
-airframe.attitude[0, 0] = 0.3
+#airframe.attitude[0, 0] = 0.3
 airframe.attitude[1, 0] = -0.06
 airframe.attitude[2, 0] = 0.0
 
@@ -45,7 +45,7 @@ for i in tqdm.tqdm(range(N)):
 
     if i % 10 == 0:
         visualization.update(i*dt, attitudes[-1]*180/pi)
-        time.sleep(0.005)
+        #time.sleep(0.005)
 
 visualization.close()
 

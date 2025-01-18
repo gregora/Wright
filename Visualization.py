@@ -50,7 +50,7 @@ class Visualization:
             self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             self.out = cv2.VideoWriter(filename, self.fourcc, fps, (int(viewport[0]),int(viewport[1])))
     
-    def update(self, t, euler):          
+    def update(self, t, euler):        
         
         glClearColor(0.2, 0.4, 0.4, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

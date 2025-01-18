@@ -2,30 +2,69 @@
     "Surfaces": [
         {
             "Name": "Left Wing",
-            "Position": [[0], [-0.5], [0]],
+            "Position": [[0], [-0.25], [0]],
             "Area": 0.0576,
             "Type": "Positive",
+            "Angle": 0.0,
             "Vertical": false
         },
         {
             "Name": "Right Wing",
-            "Position": [[0], [0.5], [0]],
+            "Position": [[0], [0.25], [0]],
             "Area": 0.0576,
             "Type": "Positive",
+            "Angle": 0.0,
             "Vertical": false
         },
         {
             "Name": "Horizontal Stabilizer",
             "Position": [[-0.5], [0], [0]],
-            "Area": 0.003,
+            "Area": 0.0015,
             "Type": "Negative",
+            "Angle": 0.0,
             "Vertical": false
         },
         {
             "Name": "Vertical Stabilizer",
             "Position": [[-0.5], [0], [-0.2]],
+            "Area": 0.002,
+            "Type": "Symetric",
+            "Angle": 0.0,
+            "Vertical": true
+        },
+
+
+
+        {
+            "Name": "Left Aileron",
+            "Position": [[0], [-0.3], [0]],
             "Area": 0.003,
             "Type": "Symetric",
+            "Angle": 0.0,
+            "Vertical": false
+        },
+        {
+            "Name": "Right Aileron",
+            "Position": [[0], [0.3], [0]],
+            "Area": 0.003,
+            "Type": "Symetric",
+            "Angle": 0.0,
+            "Vertical": false
+        },
+        {
+            "Name": "Elevator",
+            "Position": [[-0.5], [0], [0]],
+            "Area": 0.0015,
+            "Type": "Symetric",
+            "Angle": 0.0,
+            "Vertical": false
+        },
+        {
+            "Name": "Rudder",
+            "Position": [[-0.5], [0], [-0.2]],
+            "Area": 0.001,
+            "Type": "Symetric",
+            "Angle": 0.0,
             "Vertical": true
         }
     ],

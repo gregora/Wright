@@ -76,6 +76,8 @@ class Airframe:
                 if surface["Vertical"]:
                     alpha_s, beta_s = beta_s, alpha_s
 
+                alpha_s += surface["Angle"]
+
                 if surface["Type"] == "Symetric":
                     Cl, Cd = symetricC(alpha_s)
                 elif surface["Type"] == "Positive":
