@@ -12,7 +12,7 @@ from Airframe import Airframe
 from Visualization import Visualization
 
 airframe = Airframe.from_json("rc.json")
-visualization = Visualization()
+visualization = Visualization(record=True, fps=100)
 
 attitudes = []
 positions = []

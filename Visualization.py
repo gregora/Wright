@@ -8,15 +8,18 @@ from OBJFileLoader.objloader import *
 
 import numpy as np
 
+import cv2
+
 class Visualization:
 
     obj = None
     camera_pos = np.array([0, 0, 0])
     rotate = False
+    record = False
 
-    def __init__(self, viewport = (800, 800)):
+    def __init__(self, viewport = (800, 800), record = False, fps = 60, filename = "output.mp4"):
         pygame.init()
-        viewport = (800,600)
+        self.viewport = viewport
         hx = viewport[0]/2
         hy = viewport[1]/2
         srf = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
@@ -41,14 +44,21 @@ class Visualization:
         glEnable(GL_DEPTH_TEST)
         glMatrixMode(GL_MODELVIEW)
 
+        self.record = record
+
+        if self.record:
+            self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            self.out = cv2.VideoWriter(filename, self.fourcc, fps, (int(viewport[0]),int(viewport[1])))
+    
     def update(self, t, euler):          
         
+        glClearColor(0.2, 0.4, 0.4, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
   
         glTranslate(0.0, 0.0, -5)
 
-        glRotate(-50, 1, 0, 0)
+        glRotate(-70, 1, 0, 0)
 
 
         glRotate(euler[0], 1, 0, 0)
@@ -59,6 +69,15 @@ class Visualization:
         glRotate(self.camera_pos[1], 1, 0, 0)
 
         self.obj.render()
+
+
+        if self.record:
+            data = glReadPixels(0, 0, self.viewport[0], self.viewport[1], GL_RGB, GL_UNSIGNED_BYTE)
+            image = pygame.image.fromstring(data, self.viewport, 'RGB')
+            image = np.transpose(pygame.surfarray.array3d(image), (1, 0, 2))
+            image = cv2.flip(image, 0)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            self.out.write(image)
 
         pygame.display.flip()
 
@@ -76,6 +95,7 @@ class Visualization:
                 if self.rotate:
                     self.camera_pos[0] += i
                     self.camera_pos[1] += j
+
 
     def close(self):
         pygame.quit()
