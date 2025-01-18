@@ -97,5 +97,6 @@ class Visualization:
                     self.camera_pos[1] += j
 
 
+
     def close(self):
         pygame.quit()

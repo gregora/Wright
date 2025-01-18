@@ -11,6 +11,8 @@ import tqdm
 from Airframe import Airframe
 from Visualization import Visualization
 
+import pygame
+
 airframe = Airframe.from_json("rc.json")
 visualization = Visualization(record=False, fps=100)
 
@@ -20,7 +22,7 @@ positions = []
 velocities = []
 
 
-airframe.v_i[0, 0] = 5
+airframe.v_i[0, 0] = 10
 
 
 #airframe.attitude[0, 0] = 0.3
@@ -46,6 +48,28 @@ for i in tqdm.tqdm(range(N)):
     if i % 10 == 0:
         visualization.update(i*dt, attitudes[-1]*180/pi)
         #time.sleep(0.005)
+        
+        pygame.key.get_pressed()
+
+        # left arrow
+        if pygame.key.get_pressed()[pygame.K_LEFT]:
+            airframe.surfaces[4]["Angle"] = -0.35
+            airframe.surfaces[5]["Angle"] = 0.35
+        # right arrow
+        elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+            airframe.surfaces[4]["Angle"] = 0.35
+            airframe.surfaces[5]["Angle"] = -0.35
+        else:
+            airframe.surfaces[4]["Angle"] = 0
+            airframe.surfaces[5]["Angle"] = 0
+
+        # up arrow
+        if pygame.key.get_pressed()[pygame.K_UP]:
+            airframe.surfaces[6]["Angle"] = 0.35
+        elif pygame.key.get_pressed()[pygame.K_DOWN]:
+            airframe.surfaces[6]["Angle"] = -0.35
+        else:
+            airframe.surfaces[6]["Angle"] = 0
 
 visualization.close()
 
