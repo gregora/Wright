@@ -50,9 +50,9 @@ class Airframe:
         self.cm /= self.m
 
     def physics(self, dt):
-            R = getR(self.attitude)
+            #self.attitude = wrapToPi(self.attitude)
 
-            #exit()
+            R = getR(self.attitude)
 
             # THIS HAS TO BE R.T BECAUSE YOU NEED TO CALCULATE HOW VECTOR WOULD LOOK IN BODY FRAME
             # NOT HOW TO TRANSFORM THE VECTOR FROM INERTIAL TO BODY FRAME
@@ -61,6 +61,7 @@ class Airframe:
 
             torque_b = np.array([[0.0], [0.0], [0.0]])
             force_b = np.array([[0.0], [0.0], [0.0]])
+
 
             for surface in self.surfaces:
 
@@ -140,7 +141,7 @@ class Airframe:
             L_c = I_c @ self.w_i
 
             # torque_b or torque_i?
-            alpha_i = np.linalg.inv(I_c) @ (torque_b - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
+            alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
             a_i = force_i / self.m
 
 
@@ -150,6 +151,7 @@ class Airframe:
             
             self.x_i += self.v_i * dt
             self.attitude += getdEul(self.attitude, self.w_i) * dt
+            #self.attitude = wrapToPi(self.attitude)
 
             """
             print(f"Gravity: {g_b}")

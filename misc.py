@@ -58,3 +58,6 @@ def negativeC(alpha):
     Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
 
     return Cl, Cd
+
+def wrapToPi(angle):
+    return (angle + pi) % (2 * pi) - pi

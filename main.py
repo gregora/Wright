@@ -40,12 +40,17 @@ for i in tqdm.tqdm(range(N)):
 
     airframe.physics(dt)
 
+    if(np.isnan(airframe.attitude).any()):
+        break
 
     attitudes.append(airframe.attitude.copy())
     positions.append(airframe.x_i.copy())
     velocities.append(airframe.v_i.copy())
 
     if i % 10 == 0:
+
+        print(airframe.attitude*180/pi)
+
         visualization.update(i*dt, attitudes[-1]*180/pi)
         #time.sleep(0.005)
         
