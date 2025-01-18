@@ -21,6 +21,7 @@ positions = []
 
 velocities = []
 
+airframe.x_i[2, 0] = -1.5
 
 airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
@@ -30,7 +31,9 @@ airframe.v_i[2, 0] = -1
 airframe.attitude[1, 0] = 0.2
 airframe.attitude[2, 0] = 0.0
 
-
+# turn off the motor
+airframe.motors[0]["Thrust"] = 0
+airframe.motors[0]["Torque"] = 0
 
 dt = 0.0005
 
