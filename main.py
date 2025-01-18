@@ -31,9 +31,9 @@ airframe.attitude[2, 0] = 0.0
 
 
 
-dt = 0.001
+dt = 0.0005
 
-N = 60_000
+N = 120_000
 
 
 for i in tqdm.tqdm(range(N)):
@@ -47,10 +47,9 @@ for i in tqdm.tqdm(range(N)):
     positions.append(airframe.x_i.copy())
     velocities.append(airframe.v_i.copy())
 
-    if i % 10 == 0:
+    if i % 20 == 0:
 
         visualization.update(i*dt, attitudes[-1]*180/pi)
-        #time.sleep(0.005)
         
         pygame.key.get_pressed()
 
