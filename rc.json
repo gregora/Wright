@@ -27,7 +27,7 @@
         {
             "Name": "Vertical Stabilizer",
             "Position": [[-0.5], [0], [-0.2]],
-            "Area": 0.002,
+            "Area": 0.005,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true
@@ -62,7 +62,7 @@
         {
             "Name": "Rudder",
             "Position": [[-0.5], [0], [-0.2]],
-            "Area": 0.001,
+            "Area": 0.0015,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true

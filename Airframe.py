@@ -50,7 +50,7 @@ class Airframe:
         self.cm /= self.m
 
     def physics(self, dt):
-            #self.attitude = wrapToPi(self.attitude)
+            self.attitude = wrapToPi(self.attitude)
 
             R = getR(self.attitude)
 
@@ -151,7 +151,7 @@ class Airframe:
             
             self.x_i += self.v_i * dt
             self.attitude += getdEul(self.attitude, self.w_i) * dt
-            #self.attitude = wrapToPi(self.attitude)
+            self.attitude = wrapToPi(self.attitude)
 
             """
             print(f"Gravity: {g_b}")
