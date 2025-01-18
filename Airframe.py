@@ -18,6 +18,7 @@ class Airframe:
 
     surfaces = [] # list of surfaces
     masses = [] # list of point masses
+    motors = [] # list of motors
 
     m = 0 # total mass
     I = np.zeros((3, 3)) # total inertia matrix in body frame
@@ -25,9 +26,10 @@ class Airframe:
     cm = np.array([[0.0], [0.0], [0.0]]) # center of mass
 
 
-    def __init__(self, surfaces = [], masses = []):
+    def __init__(self, surfaces = [], masses = [], motors = []):
         self.surfaces = surfaces
         self.masses = masses
+        self.motors = motors
 
         self.compute_fixed_values()
 
@@ -124,6 +126,11 @@ class Airframe:
                 print()
                 """
 
+            for motor in self.motors:
+                force_b += motor["Thrust"] * np.array([[1], [0], [0]])
+                torque_b += motor["Torque"] * np.array([[1], [0], [0]])
+
+                torque_b += np.array([np.cross(motor["Position"][:, 0], motor["Thrust"] * np.array([[1], [0], [0]])[:, 0])]).T
 
 
             g_b = R.T @ self.g_i
@@ -170,6 +177,7 @@ class Airframe:
         
         surfaces = data["Surfaces"]
         masses = data["Masses"]
+        motors = data["Motors"]
 
         for s in surfaces:
             s["Position"] = np.array(s["Position"])
@@ -177,4 +185,9 @@ class Airframe:
         for m in masses:
             m["Position"] = np.array(m["Position"])
 
-        return Airframe(surfaces, masses)
+        for m in motors:
+            m["Position"] = np.array(m["Position"])
+
+        
+
+        return Airframe(surfaces, masses, motors)

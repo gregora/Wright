@@ -23,10 +23,11 @@ velocities = []
 
 
 airframe.v_i[0, 0] = 10
-
+airframe.v_i[1, 0] = 0
+airframe.v_i[2, 0] = -1
 
 #airframe.attitude[0, 0] = 0.3
-airframe.attitude[1, 0] = -0.06
+airframe.attitude[1, 0] = 0.2
 airframe.attitude[2, 0] = 0.0
 
 

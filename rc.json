@@ -20,7 +20,7 @@
             "Name": "Horizontal Stabilizer",
             "Position": [[-0.5], [0], [0]],
             "Area": 0.015,
-            "Type": "Negative",
+            "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
@@ -131,6 +131,14 @@
             "Name": "Nose",
             "Position": [[0.5], [0], [0]],
             "Mass": 0.000
+        }
+    ],
+    "Motors": [
+        {
+            "Name": "Motor",
+            "Position": [[0.5], [0], [-0.02]],
+            "Thrust": 3,
+            "Torque": -0.01
         }
     ]
 }
