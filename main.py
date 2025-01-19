@@ -52,7 +52,7 @@ for i in tqdm.tqdm(range(N)):
     if i % 20 == 0:
 
         # add random wind
-        #airframe.v_i += np.random.randn(3, 1) * 0.1
+        airframe.v_i += np.random.randn(3, 1) * 0.1
 
 
         positions.append(airframe.x_i.copy())
