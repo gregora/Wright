@@ -14,7 +14,7 @@ from Visualization import Visualization
 import pygame
 
 airframe = Airframe.from_json("rc.json")
-visualization = Visualization(record=True, fps=100)
+visualization = Visualization(record=False, fps=100)
 
 attitudes = []
 positions = []
