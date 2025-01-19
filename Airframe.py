@@ -170,13 +170,11 @@ class Airframe:
             """
 
     def sensor_data(self):
-        eul = self.attitude.copy()
-        
         R = getR(self.attitude)
 
-        w_b = R.T @ self.w_i
+        w_b = R.T @ self.w_i.copy()
 
-        return eul, w_b
+        return R2ZYX(R), w_b
 
     def from_json(file):
         with open(file, 'r') as f:

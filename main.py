@@ -21,15 +21,17 @@ positions = []
 
 velocities = []
 
+commands = []
+
 airframe.x_i[2, 0] = -1.5
 
 airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
 airframe.v_i[2, 0] = -1
 
-#airframe.attitude[0, 0] = 0.3
+airframe.attitude[0, 0] = 0.0
 airframe.attitude[1, 0] = 0.2
-airframe.attitude[2, 0] = 0.0
+airframe.attitude[2, 0] = 0
 
 # turn off the motor
 #airframe.motors[0]["Thrust"] = 0
@@ -37,7 +39,7 @@ airframe.attitude[2, 0] = 0.0
 
 dt = 0.0005
 
-N = 120_000
+N = 30_000
 
 
 for i in tqdm.tqdm(range(N)):
@@ -49,10 +51,38 @@ for i in tqdm.tqdm(range(N)):
 
     if i % 20 == 0:
 
-        attitudes.append(airframe.attitude.copy())
+        # add random wind
+        #airframe.v_i += np.random.randn(3, 1) * 0.1
+
+
         positions.append(airframe.x_i.copy())
         velocities.append(airframe.v_i.copy())
 
+        visualization.update(i*dt, airframe.attitude*180/pi)
+
+        
+
+        pygame.key.get_pressed()
+
+        # left arrow
+        if pygame.key.get_pressed()[pygame.K_LEFT]:
+            airframe.surfaces[5]["Angle"] = -0.35
+            airframe.surfaces[6]["Angle"] = 0.35
+        # right arrow
+        elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+            airframe.surfaces[5]["Angle"] = 0.35
+            airframe.surfaces[6]["Angle"] = -0.35
+        else:
+           airframe.surfaces[5]["Angle"] = 0
+           airframe.surfaces[6]["Angle"] = 0
+
+        # up arrow
+        if pygame.key.get_pressed()[pygame.K_UP]:
+            airframe.surfaces[7]["Angle"] = 0.35
+        elif pygame.key.get_pressed()[pygame.K_DOWN]:
+            airframe.surfaces[7]["Angle"] = -0.35
+        else:
+            airframe.surfaces[7]["Angle"] = 0
 
         eul, w_b = airframe.sensor_data()
 
@@ -67,34 +97,23 @@ for i in tqdm.tqdm(range(N)):
         airframe.surfaces[5]["Angle"] = - (eul[0,0] - 0)*P - w_b[0,0]*D
         airframe.surfaces[6]["Angle"] =   (eul[0,0] - 0)*P - w_b[0,0]*D
 
-
-
-
-        visualization.update(i*dt, attitudes[-1]*180/pi)
-
-        
-
-        pygame.key.get_pressed()
-
-        # left arrow
-        if pygame.key.get_pressed()[pygame.K_LEFT]:
-            airframe.surfaces[5]["Angle"] = -0.35
-            airframe.surfaces[6]["Angle"] = 0.35
-        # right arrow
-        elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-            airframe.surfaces[5]["Angle"] = 0.35
-            airframe.surfaces[6]["Angle"] = -0.35
-        #else:
-        #   airframe.surfaces[5]["Angle"] = 0
-        #   airframe.surfaces[6]["Angle"] = 0
-
-        # up arrow
-        if pygame.key.get_pressed()[pygame.K_UP]:
+        if airframe.surfaces[7]["Angle"] > 0.35:
             airframe.surfaces[7]["Angle"] = 0.35
-        elif pygame.key.get_pressed()[pygame.K_DOWN]:
+        elif airframe.surfaces[7]["Angle"] < -0.35:
             airframe.surfaces[7]["Angle"] = -0.35
-        #else:
-        #    airframe.surfaces[7]["Angle"] = 0
+
+        if airframe.surfaces[5]["Angle"] > 0.35:
+            airframe.surfaces[5]["Angle"] = 0.35
+        elif airframe.surfaces[5]["Angle"] < -0.35:
+            airframe.surfaces[5]["Angle"] = -0.35
+
+        if airframe.surfaces[6]["Angle"] > 0.35:
+            airframe.surfaces[6]["Angle"] = 0.35
+        elif airframe.surfaces[6]["Angle"] < -0.35:
+            airframe.surfaces[6]["Angle"] = -0.35
+
+        attitudes.append(eul)
+        commands.append([airframe.surfaces[5]["Angle"], airframe.surfaces[7]["Angle"], airframe.surfaces[8]["Angle"]])
 
 visualization.close()
 
@@ -103,8 +122,9 @@ visualization.close()
 attitudes = np.array(attitudes)
 positions = np.array(positions)
 velocities = np.array(velocities)
+commands = np.array(commands)
 
-T = np.linspace(0, dt*50*len(attitudes), len(attitudes))
+T = np.linspace(0, dt*20*len(attitudes), len(attitudes))
 
 plt.subplot(2, 2, 1)
 
@@ -129,6 +149,15 @@ plt.plot(T, velocities[:, 1], label="Vy")
 plt.plot(T, velocities[:, 2], label="Vz")
 
 plt.legend()
+
+plt.subplot(2, 2, 4)
+
+plt.plot(T, commands[:, 0], label="Ailerons")
+plt.plot(T, commands[:, 1], label="Elevator")
+plt.plot(T, commands[:, 2], label="Rudder")
+
+plt.legend()
+
 
 plt.show()
 

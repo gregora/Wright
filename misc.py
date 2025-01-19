@@ -1,5 +1,5 @@
 import numpy as np
-from math import cos, sin, tan, pi
+from math import cos, sin, tan, pi, atan2, asin
 
 
 def getR(attitude):
@@ -40,6 +40,22 @@ def getdEul(attitude, w_b):
                      [0, sin(roll) / cos(pitch), cos(roll) / cos(pitch)]]) @ w_b
 
     return dEul
+
+def R2ZYX(R):
+    # Returns the euler angles from the rotation matrix
+    # Yaw - Pitch - Roll representation
+
+    pitch = -asin(R[2, 0])
+
+    if cos(pitch) != 0:
+        roll = atan2(R[2, 1] / cos(pitch), R[2, 2] / cos(pitch))
+        yaw = atan2(R[1, 0] / cos(pitch), R[0, 0] / cos(pitch))
+    else:
+        roll = 0
+        yaw = atan2(R[1, 0], R[0, 0])
+
+    return np.array([[roll], [pitch], [yaw]])
+
 
 def symetricC(alpha):
     Cl = 0.5 * alpha / 5 * 180 / pi
