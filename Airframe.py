@@ -13,7 +13,6 @@ class Airframe:
     v_i = np.zeros((3, 1)) # inertial velocities
     w_i = np.zeros((3, 1)) # inertial angular velocities
 
-
     g_i = np.array([[0], [0], [9.81]]) # gravity vector in inertial frame
 
     surfaces = [] # list of surfaces
@@ -169,6 +168,15 @@ class Airframe:
             print()
             print()
             """
+
+    def sensor_data(self):
+        eul = self.attitude.copy()
+        
+        R = getR(self.attitude)
+
+        w_b = R.T @ self.w_i
+
+        return eul, w_b
 
     def from_json(file):
         with open(file, 'r') as f:

@@ -32,8 +32,8 @@ airframe.attitude[1, 0] = 0.2
 airframe.attitude[2, 0] = 0.0
 
 # turn off the motor
-airframe.motors[0]["Thrust"] = 0
-airframe.motors[0]["Torque"] = 0
+#airframe.motors[0]["Thrust"] = 0
+#airframe.motors[0]["Torque"] = 0
 
 dt = 0.0005
 
@@ -47,14 +47,33 @@ for i in tqdm.tqdm(range(N)):
     if(np.isnan(airframe.attitude).any()):
         break
 
-    attitudes.append(airframe.attitude.copy())
-    positions.append(airframe.x_i.copy())
-    velocities.append(airframe.v_i.copy())
-
     if i % 20 == 0:
 
+        attitudes.append(airframe.attitude.copy())
+        positions.append(airframe.x_i.copy())
+        velocities.append(airframe.v_i.copy())
+
+
+        eul, w_b = airframe.sensor_data()
+
+        eul = eul * 180 / pi
+
+        # control law imitation
+        P = 0.35 / 90
+        D = 0.01 / (4 * 3.14)
+
+        airframe.surfaces[7]["Angle"] = (eul[1, 0] - 10) * P + w_b[1, 0]*D
+
+        airframe.surfaces[5]["Angle"] = - (eul[0,0] - 0)*P - w_b[0,0]*D
+        airframe.surfaces[6]["Angle"] =   (eul[0,0] - 0)*P - w_b[0,0]*D
+
+
+
+
         visualization.update(i*dt, attitudes[-1]*180/pi)
+
         
+
         pygame.key.get_pressed()
 
         # left arrow
@@ -65,17 +84,17 @@ for i in tqdm.tqdm(range(N)):
         elif pygame.key.get_pressed()[pygame.K_RIGHT]:
             airframe.surfaces[5]["Angle"] = 0.35
             airframe.surfaces[6]["Angle"] = -0.35
-        else:
-            airframe.surfaces[5]["Angle"] = 0
-            airframe.surfaces[6]["Angle"] = 0
+        #else:
+        #   airframe.surfaces[5]["Angle"] = 0
+        #   airframe.surfaces[6]["Angle"] = 0
 
         # up arrow
         if pygame.key.get_pressed()[pygame.K_UP]:
             airframe.surfaces[7]["Angle"] = 0.35
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
             airframe.surfaces[7]["Angle"] = -0.35
-        else:
-            airframe.surfaces[7]["Angle"] = 0
+        #else:
+        #    airframe.surfaces[7]["Angle"] = 0
 
 visualization.close()
 
@@ -85,7 +104,7 @@ attitudes = np.array(attitudes)
 positions = np.array(positions)
 velocities = np.array(velocities)
 
-T = np.linspace(0, dt*N, N)
+T = np.linspace(0, dt*50*len(attitudes), len(attitudes))
 
 plt.subplot(2, 2, 1)
 
