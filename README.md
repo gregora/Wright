@@ -47,13 +47,15 @@ Using rigid body kinematics, torques and forces can then be transformed into $\d
 
 By choosing an inital nose-up attitude with a slight roll, both phugoid oscilations and dutch roll can be observed.
 
-![gif1](Media/phugoid_dutch.gif)
-![img1](Media/phugoid_dutch.png)
+<img src="Media/phugoid_dutch.gif" height="250px" />
+<img src="Media/phugoid_dutch.png" height="250px" />
+
+
 
 
 ### PD regulator
 
 I also constructed a simple PD regulator to regulate both pitch and roll. Target values were 11 degrees nose-up and no roll.
 
-![gif2](Media/takeoff_mode.gif)
-![img2](Media/takeoff_mode.png)
+<img src="Media/takeoff_mode.gif" height="250px" />
+<img src="Media/takeoff_mode.png" height="250px" />
