@@ -137,7 +137,7 @@
         {
             "Name": "Motor",
             "Position": [[0.5], [0], [-0.02]],
-            "Thrust": 3,
+            "Thrust": 4,
             "Torque": -0.01
         }
     ]
