@@ -92,7 +92,7 @@ for i in tqdm.tqdm(range(N)):
         P = 0.35 / 90
         D = 0.01 / (4 * 3.14)
 
-        airframe.surfaces[7]["Angle"] = (eul[1, 0] - 20) * P + w_b[1, 0]*D
+        airframe.surfaces[7]["Angle"] = (eul[1, 0] - 10) * P + w_b[1, 0]*D
 
         airframe.surfaces[5]["Angle"] = - (eul[0,0] - 0)*P - w_b[0,0]*D
         airframe.surfaces[6]["Angle"] =   (eul[0,0] - 0)*P - w_b[0,0]*D

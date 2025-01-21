@@ -24,6 +24,8 @@ class Visualization:
         hx = viewport[0]/2
         hy = viewport[1]/2
         srf = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
+        
+        pygame.display.set_caption("Wright")
 
         glLightfv(GL_LIGHT0, GL_POSITION,  (-40, 200, 100, 0.0))
         glLightfv(GL_LIGHT0, GL_AMBIENT, (0.2, 0.2, 0.2, 1.0))
