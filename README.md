@@ -55,7 +55,7 @@ By choosing an inital nose-up attitude with a slight roll, both phugoid oscilati
 
 ### PD regulator
 
-I also constructed a simple PD regulator to regulate both pitch and roll. Target values were 11 degrees nose-up and no roll.
+I also constructed a simple PD regulator to regulate both pitch and roll. Target values were 10 degrees nose-up and no roll.
 
 <img src="Media/takeoff_mode.gif" height="250px" />
 <img src="Media/takeoff_mode.png" height="250px" />

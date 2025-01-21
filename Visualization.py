@@ -13,6 +13,7 @@ import cv2
 class Visualization:
 
     obj = None
+    ground = None
     camera_pos = np.array([0, 0, 0])
     rotate = False
     record = False
@@ -37,10 +38,13 @@ class Visualization:
         self.obj = OBJ("CAD/plane.obj", swapyz=True)
         self.obj.generate()
         
+        self.ground = OBJ("CAD/ground.obj", swapyz=True)
+        self.ground.generate()
+
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         width, height = viewport
-        gluPerspective(90.0, width/float(height), 1, 100.0)
+        gluPerspective(90.0, width/float(height), 1, 3000.0)
         glEnable(GL_DEPTH_TEST)
         glMatrixMode(GL_MODELVIEW)
 
@@ -50,25 +54,32 @@ class Visualization:
             self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             self.out = cv2.VideoWriter(filename, self.fourcc, fps, (int(viewport[0]),int(viewport[1])))
     
-    def update(self, t, euler):        
+    def update(self, t, x, euler):        
         
         glClearColor(0.2, 0.4, 0.4, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
   
+
         glTranslate(0.0, 0.0, -5)
 
         glRotate(-70, 1, 0, 0)
+
+        glRotate(self.camera_pos[0], 0, 0, 1)
+        glRotate(self.camera_pos[1], 1, 0, 0)
+
+        glTranslate(-x[0, 0], x[1, 0], x[2, 0])
+        self.ground.render()
+        glTranslate(x[0, 0], -x[1, 0], -x[2, 0])
 
 
         glRotate(euler[0], 1, 0, 0)
         glRotate(-euler[1], 0, 1, 0)
         glRotate(-euler[2], 0, 0, 1)
 
-        glRotate(self.camera_pos[0], 0, 0, 1)
-        glRotate(self.camera_pos[1], 1, 0, 0)
-
         self.obj.render()
+
+
 
 
         if self.record:
