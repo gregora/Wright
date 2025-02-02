@@ -1,144 +1,124 @@
 {
-    "Surfaces": [
-        {
-            "Name": "Left Wing",
+    "Surfaces": {
+        "Left Wing": {
             "Position": [[0], [-0.25], [0]],
             "Area": 0.0576,
             "Type": "Positive",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Right Wing",
+        "Right Wing": {
             "Position": [[0], [0.25], [0]],
             "Area": 0.0576,
             "Type": "Positive",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Horizontal Stabilizer",
+        "Horizontal Stabilizer": {
             "Position": [[-0.5], [0], [0]],
             "Area": 0.015,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Vertical Stabilizer",
+        "Vertical Stabilizer": {
             "Position": [[-0.5], [0], [-0.2]],
             "Area": 0.0168,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true
         },
-        {
-            "Name": "Fuselage",
+        "Fuselage": {
             "Position": [[0], [0], [0.035]],
             "Area": 0.049,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
-
-
-
-        {
-            "Name": "Left Aileron",
+        "Left Aileron": {
             "Position": [[0], [-0.3], [0]],
             "Area": 0.0075,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Right Aileron",
+        "Right Aileron": {
             "Position": [[0], [0.3], [0]],
             "Area": 0.0075,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Elevator",
+        "Elevator": {
             "Position": [[-0.5], [0], [0]],
             "Area": 0.015,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
-        {
-            "Name": "Rudder",
+        "Rudder": {
             "Position": [[-0.5], [0], [-0.2]],
             "Area": 0.0084,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true
         }
-    ],
-    "Masses": [
-        {
-            "Name": "Battery",
+    },
+
+
+    "Masses": {
+        "Battery": {
             "Position": [[0.15], [0], [0.03]],
             "Mass": 0.147
         },
-        {
-            "Name": "Motor",
+        "Motor": {
             "Position": [[0.35], [0], [-0.02]],
             "Mass": 0.064
         },
-        {
-            "Name": "ESC",
+        "ESC": {
             "Position": [[0.25], [0], [-0.04]],
             "Mass": 0.038
         },
-        {
-            "Name": "Flight Controller",
+        "Flight Controller": {
             "Position": [[-0.30], [0], [0]],
             "Mass": 0.07
         },
-        {
-            "Name": "Receiver",
+        "Receiver": {
             "Position": [[0.0], [0], [0]],
             "Mass": 0.02
         },
-        {
-            "Name": "Left Wing",
+        "Left Wing": {
             "Position": [[0], [-0.5], [0]],
             "Mass": 0.01
         },
-        {
-            "Name": "Right Wing",
+        "Right Wing": {
             "Position": [[0], [0.5], [0]],
             "Mass": 0.01
         },
-        {
-            "Name": "Horizontal Stabilizer",
+        "Horizontal Stabilizer": {
             "Position": [[-0.5], [0], [0]],
             "Mass": 0.03
         },
-        {
-            "Name": "Vertical Stabilizer",
+        "Vertical Stabilizer": {
             "Position": [[-0.5], [0], [-0.2]],
             "Mass": 0.03
         },
-        {
-            "Name": "Fuselage",
+        "Fuselage": {
             "Position": [[0], [0], [0.1]],
             "Mass": 0.1
         },
-        {
-            "Name": "Nose",
+        "Nose": {
             "Position": [[0.5], [0], [0]],
             "Mass": 0.000
         }
-    ],
-    "Motors": [
-        {
-            "Name": "Motor",
+    },
+
+    
+    "Motors": {
+        "Motor": {
             "Position": [[0.5], [0], [-0.02]],
             "Thrust": 4,
             "Torque": -0.01
         }
-    ]
+    }
 }

@@ -39,7 +39,7 @@ class Airframe:
 
         self.cm = np.array([[0.0], [0.0], [0.0]])
 
-        for mass in self.masses:
+        for mass in self.masses.values():
             self.m += mass["Mass"]
 
             self.I += mass["Mass"] * np.array([[mass["Position"][1, 0]**2 + mass["Position"][2, 0]**2, -mass["Position"][0, 0] * mass["Position"][1, 0], -mass["Position"][0, 0] * mass["Position"][2, 0]],
@@ -64,7 +64,7 @@ class Airframe:
             force_b = np.array([[0.0], [0.0], [0.0]])
 
 
-            for surface in self.surfaces:
+            for surface in self.surfaces.values():
 
                 # calculate surface velocity
                 v_s = np.cross(w_b[:, 0], surface["Position"][:, 0])
@@ -125,7 +125,7 @@ class Airframe:
                 print()
                 """
 
-            for motor in self.motors:
+            for motor in self.motors.values():
                 force_b += motor["Thrust"] * np.array([[1], [0], [0]])
                 torque_b += motor["Torque"] * np.array([[1], [0], [0]])
 
@@ -186,13 +186,13 @@ class Airframe:
         masses = data["Masses"]
         motors = data["Motors"]
 
-        for s in surfaces:
+        for s in surfaces.values():
             s["Position"] = np.array(s["Position"])
         
-        for m in masses:
+        for m in masses.values():
             m["Position"] = np.array(m["Position"])
 
-        for m in motors:
+        for m in motors.values():
             m["Position"] = np.array(m["Position"])
 
         

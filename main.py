@@ -65,23 +65,23 @@ for i in tqdm.tqdm(range(N)):
 
         # left arrow
         if pygame.key.get_pressed()[pygame.K_LEFT]:
-            airframe.surfaces[5]["Angle"] = -0.35 / 2
-            airframe.surfaces[6]["Angle"] = 0.35 / 2
+            airframe.surfaces["Left Aileron"]["Angle"] = -0.35 / 2
+            airframe.surfaces["Right Aileron"]["Angle"] = 0.35 / 2
         # right arrow
         elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-            airframe.surfaces[5]["Angle"] = 0.35 / 2
-            airframe.surfaces[6]["Angle"] = -0.35 / 2
+            airframe.surfaces["Left Aileron"]["Angle"] = 0.35 / 2
+            airframe.surfaces["Right Aileron"]["Angle"] = -0.35 / 2
         else:
-           airframe.surfaces[5]["Angle"] = 0
-           airframe.surfaces[6]["Angle"] = 0
+           airframe.surfaces["Left Aileron"]["Angle"] = 0
+           airframe.surfaces["Right Aileron"]["Angle"] = 0
 
         # up arrow
         if pygame.key.get_pressed()[pygame.K_UP]:
-            airframe.surfaces[7]["Angle"] = 0.35 / 2
+            airframe.surfaces["Elevator"]["Angle"] = 0.35 / 2
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
-            airframe.surfaces[7]["Angle"] = -0.35 / 2
+            airframe.surfaces["Elevator"]["Angle"] = -0.35 / 2
         else:
-            airframe.surfaces[7]["Angle"] = 0
+            airframe.surfaces["Elevator"]["Angle"] = 0
 
         eul, w_b = airframe.sensor_data()
 
@@ -91,28 +91,28 @@ for i in tqdm.tqdm(range(N)):
         P = 0.35 / 90
         D = 0.01 / (4 * 3.14)
 
-        airframe.surfaces[7]["Angle"] = (eul[1, 0] - 10) * P + w_b[1, 0]*D
+        airframe.surfaces["Elevator"]["Angle"]      =   (eul[1, 0] - 10) * P + w_b[1, 0]*D
 
-        airframe.surfaces[5]["Angle"] = - (eul[0,0] - 0)*P - w_b[0,0]*D
-        airframe.surfaces[6]["Angle"] =   (eul[0,0] - 0)*P - w_b[0,0]*D
+        airframe.surfaces["Left Aileron"]["Angle"]  = - (eul[0,0] - 0)*P - w_b[0,0]*D
+        airframe.surfaces["Right Aileron"]["Angle"] =   (eul[0,0] - 0)*P - w_b[0,0]*D
 
-        if airframe.surfaces[7]["Angle"] > 0.35:
-            airframe.surfaces[7]["Angle"] = 0.35
-        elif airframe.surfaces[7]["Angle"] < -0.35:
-            airframe.surfaces[7]["Angle"] = -0.35
+        if airframe.surfaces["Elevator"]["Angle"] > 0.35:
+            airframe.surfaces["Elevator"]["Angle"] = 0.35
+        elif airframe.surfaces["Elevator"]["Angle"] < -0.35:
+            airframe.surfaces["Elevator"]["Angle"] = -0.35
 
-        if airframe.surfaces[5]["Angle"] > 0.35:
-            airframe.surfaces[5]["Angle"] = 0.35
-        elif airframe.surfaces[5]["Angle"] < -0.35:
-            airframe.surfaces[5]["Angle"] = -0.35
+        if airframe.surfaces["Left Aileron"]["Angle"] > 0.35:
+            airframe.surfaces["Left Aileron"]["Angle"] = 0.35
+        elif airframe.surfaces["Left Aileron"]["Angle"] < -0.35:
+            airframe.surfaces["Left Aileron"]["Angle"] = -0.35
 
-        if airframe.surfaces[6]["Angle"] > 0.35:
-            airframe.surfaces[6]["Angle"] = 0.35
-        elif airframe.surfaces[6]["Angle"] < -0.35:
-            airframe.surfaces[6]["Angle"] = -0.35
+        if airframe.surfaces["Right Aileron"]["Angle"] > 0.35:
+            airframe.surfaces["Right Aileron"]["Angle"] = 0.35
+        elif airframe.surfaces["Right Aileron"]["Angle"] < -0.35:
+            airframe.surfaces["Right Aileron"]["Angle"] = -0.35
 
         attitudes.append(eul)
-        commands.append([airframe.surfaces[5]["Angle"], airframe.surfaces[7]["Angle"], airframe.surfaces[8]["Angle"]])
+        commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])
 
 visualization.close()
 
