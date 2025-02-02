@@ -135,8 +135,6 @@ class Airframe:
             g_b = R.T @ self.g_i
             torque_b += np.array([np.cross(self.cm[:, 0], self.m * g_b[:, 0])]).T
 
-
-
             force_b += self.m * g_b
             
 
@@ -146,9 +144,12 @@ class Airframe:
             I_c = R @ self.I @ R.T # first calculate where vector would be in body frame, multiply by I and transform back
             L_c = I_c @ self.w_i
 
-            # torque_b or torque_i?
-            alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
             a_i = force_i / self.m
+
+            # because center of body is not in the center of mass, we have to take into account the acceleration of the center of mass 
+            torque_i = torque_i - np.array([np.cross(self.cm[:, 0], force_i[:, 0])]).T
+            # calculate angular acceleration from torque 
+            alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
 
 
             self.v_i += a_i * dt

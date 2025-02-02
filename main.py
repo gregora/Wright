@@ -39,7 +39,7 @@ airframe.attitude[2, 0] = 0
 
 dt = 0.0005
 
-N = 300_000
+N = 60_000
 
 
 for i in tqdm.tqdm(range(N)):
@@ -61,7 +61,6 @@ for i in tqdm.tqdm(range(N)):
         visualization.update(i*dt, airframe.x_i, airframe.attitude*180/pi)
 
         
-
         pygame.key.get_pressed()
 
         # left arrow
