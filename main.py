@@ -88,8 +88,8 @@ for i in tqdm.tqdm(range(N)):
         eul = eul * 180 / pi
 
         # control law imitation
-        P = 0.35 / 90
-        D = 0.01 / (4 * 3.14)
+        P = 4.0 / 90            * 0.35
+        D = 0.1 / (4 * 3.14)    * 0.35
 
         airframe.surfaces["Elevator"]["Angle"]      =   (eul[1, 0] - 10) * P + w_b[1, 0]*D
 
