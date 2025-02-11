@@ -57,23 +57,79 @@ def R2ZYX(R):
     return np.array([[roll], [pitch], [yaw]])
 
 
+def parsePolarTxt(filename):
+    # Reads a txt and returns a numpy array
+
+
+    f = open(filename, 'r')
+
+    data = f.readlines()
+
+    data = data[12:]
+
+    array = []
+
+    for line in data:
+        line = line.strip()
+        line = line.split(" ")
+
+        line = [float(i) for i in line if i != '']
+
+        array.append(line)
+
+    array = np.array(array)
+
+    f.close()
+
+    return array
+
+
+NACA0006 = parsePolarTxt('Airfoils/xf-naca0006-il-1000000.txt')
+NACA2415 = parsePolarTxt('Airfoils/xf-naca2415-il-1000000.txt')
+
+# NACA 0006 airfoil
 def symetricC(alpha):
-    Cl = 0.5 * alpha / 5 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+    # Small angle approximation
+    #Cl = 0.5 * alpha / 5 * 180 / pi
+    #Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+
+    # Interpolation
+    alpha = alpha * 180 / pi
+
+    Cl = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 1])
+    Cd = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 2])
 
     return Cl, Cd
 
+# NACA 2415 airfoil
 def positiveC(alpha):
-    Cl = 0.2 + 0.5 * alpha / 5 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+    # Small angle approximation
+    #Cl = 0.2 + 0.5 * alpha / 5 * 180 / pi
+    #Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+
+    # Interpolation
+    alpha = alpha * 180 / pi
+    Cl = np.interp(alpha, NACA2415[:, 0], NACA2415[:, 1])
+    Cd = np.interp(alpha, NACA2415[:, 0], NACA2415[:, 2])
 
     return Cl, Cd
 
+# NACA 2415 airfoil, turned upside down
 def negativeC(alpha):
-    Cl = -0.2 + 0.5 * alpha / 5 * 180 / pi
-    Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+    # Small angle approximation
+    #Cl = -0.2 + 0.5 * alpha / 5 * 180 / pi
+    #Cd = (alpha * 180 / pi)**2 * 0.00017 + 0.01
+
+    # Interpolation
+    alpha = alpha * 180 / pi
+
+    Cl = -np.interp(-alpha, NACA2415[:, 0], NACA2415[:, 1])
+    Cd = -np.interp(-alpha, NACA2415[:, 0], NACA2415[:, 2])
 
     return Cl, Cd
+
 
 def wrapToPi(angle):
     return (angle + pi) % (2 * pi) - pi
