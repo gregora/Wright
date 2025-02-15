@@ -89,11 +89,11 @@
         },
         "Left Wing": {
             "Position": [[0], [-0.5], [0]],
-            "Mass": 0.01
+            "Mass": 0.05
         },
         "Right Wing": {
             "Position": [[0], [0.5], [0]],
-            "Mass": 0.01
+            "Mass": 0.05
         },
         "Horizontal Stabilizer": {
             "Position": [[-0.5], [0], [0]],
@@ -105,7 +105,7 @@
         },
         "Fuselage": {
             "Position": [[0], [0], [0.1]],
-            "Mass": 0.1
+            "Mass": 0.18
         },
         "Nose": {
             "Position": [[0.5], [0], [0]],
