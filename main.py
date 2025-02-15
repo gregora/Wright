@@ -34,8 +34,8 @@ airframe.attitude[1, 0] = 0.2
 airframe.attitude[2, 0] = 0
 
 # turn off the motor
-#airframe.motors[0]["Thrust"] = 0
-#airframe.motors[0]["Torque"] = 0
+#airframe.motors["Motor"]["Thrust"] = 0
+#airframe.motors["Motor"]["Torque"] = 0
 
 dt = 0.0005
 
