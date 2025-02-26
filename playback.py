@@ -14,16 +14,24 @@ from Visualization import Visualization
 
 import pygame
 
+import sys
+
 visualization = Visualization(record=False, fps=100)
 
-data = pd.read_csv("playbacks/playback2.csv")
+file = "playbacks/playback1.csv"
+
+if len(sys.argv) > 1:
+    file = sys.argv[1]
+
+data = pd.read_csv(file)
 
 ground_height = 300
 
 data["Time"] = data["Time"] - data["Time"][0]
-data["Latitude"] = data["Latitude"] - data["Latitude"][0]
-data["Longitude"] = data["Longitude"] - data["Longitude"][0]
+
 data["Altitude"] = data["Altitude"] - ground_height
+data["Latitude"]  = (data["Latitude"]  - data["Latitude"][0])  * 40_075 * 1000 / 360
+data["Longitude"] = (data["Longitude"] - data["Longitude"][0]) * 40_075 * 1000 / 360
 
 t = 0
 
