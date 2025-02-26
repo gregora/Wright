@@ -17,13 +17,14 @@ class Visualization:
     camera_pos = np.array([0, 0, 0])
     rotate = False
     record = False
+    surface = None
 
     def __init__(self, viewport = (800, 800), record = False, fps = 60, filename = "output.mp4"):
         pygame.init()
         self.viewport = viewport
         hx = viewport[0]/2
         hy = viewport[1]/2
-        srf = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
+        self.surface = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
         
         pygame.display.set_caption("Wright")
 

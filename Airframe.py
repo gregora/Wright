@@ -53,7 +53,7 @@ class Airframe:
     def physics(self, dt):
             self.attitude = wrapToPi(self.attitude)
 
-            R = getR(self.attitude)
+            R = XYZ2R(self.attitude)
 
             # THIS HAS TO BE R.T BECAUSE YOU NEED TO CALCULATE HOW VECTOR WOULD LOOK IN BODY FRAME
             # NOT HOW TO TRANSFORM THE VECTOR FROM INERTIAL TO BODY FRAME
@@ -157,7 +157,7 @@ class Airframe:
             
             
             self.x_i += self.v_i * dt
-            self.attitude += getdEul(self.attitude, self.w_i) * dt
+            self.attitude += getdXYZ(self.attitude, self.w_i) * dt
             self.attitude = wrapToPi(self.attitude)
 
             """
@@ -171,7 +171,7 @@ class Airframe:
             """
 
     def sensor_data(self):
-        R = getR(self.attitude)
+        R = XYZ2R(self.attitude)
 
         w_b = R.T @ self.w_i.copy()
 
