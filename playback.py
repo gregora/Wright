@@ -64,15 +64,14 @@ while True:
     x_gps = np.array([[latitude], [longitude], [-altitude]]) # x points to north, y points to east, z points down
 
     eul_gyro = np.array([[yaw], [-pitch], [-roll]])
-    eul = np.array([[-yaw], [pitch], [roll]])
+    eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
 
     R = ZYX2R(eul_gyro*pi/180)
     a_i = R.T @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
     
-    #a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
-    #a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
+    a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
+    a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
 
-    print(x)
 
     if x.all() == 0.0:
         x = x_gps
