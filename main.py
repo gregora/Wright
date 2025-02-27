@@ -58,6 +58,7 @@ for i in tqdm.tqdm(range(N)):
         positions.append(airframe.x_i.copy())
         velocities.append(airframe.v_i.copy())
 
+        visualization.history.append(airframe.x_i.copy()[:,0])
         visualization.update(i*dt, airframe.x_i, airframe.attitude*180/pi)
 
         
