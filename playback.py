@@ -34,7 +34,15 @@ data["Altitude"] = data["Altitude"] - ground_height
 data["Latitude"]  = (data["Latitude"]  - data["Latitude"][0])  * 40_075 * 1000 / 360
 data["Longitude"] = (data["Longitude"] - data["Longitude"][0]) * 40_075 * 1000 / 360
 
+v_i = np.zeros((3, 1))
+x = np.zeros((3, 1))
+
 t = 0
+dt = 0
+
+Pk = np.eye(6) * 10
+
+x_gps = None
 
 while True:
     time_start = time.time()
@@ -48,12 +56,58 @@ while True:
     longitude = np.interp(t, data["Time"], data["Longitude"])
     altitude = np.interp(t, data["Time"], data["Altitude"])
 
-    x = np.array([[latitude], [longitude], [-altitude]])
+    a_bx = np.interp(t, data["Time"], data["ax"])
+    a_by = np.interp(t, data["Time"], data["ay"])
+    a_bz = np.interp(t, data["Time"], data["az"])
+
+    x_gps_prev = x_gps
+    x_gps = np.array([[latitude], [longitude], [-altitude]])
+
     eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
 
-    visualization.history.append(x[:,0])
-    visualization.update(t, x, R2XYZ(ZYX2R(eul*pi/180))*180/pi)
+    R = ZYX2R(eul*pi/180)
+    a_i = R.T @ np.array([[-a_bx], [a_by], [-a_bz]]) # body frame acceleration
+
+    if x.all() == 0.0:
+        x = x_gps
+    
+    x = x_gps
+    #x = x + dt * v_i
+    v_i = v_i + dt * a_i
+
+    if x_gps_prev is not None and x_gps_prev.all() != x_gps.all():
+        Fk = np.array([
+        [0, 0, 0,  1,  0,  0],
+        [0, 0, 0,  0,  1,  0],
+        [0, 0, 0,  0,  0,  1],
+        [1, 0, 0, dt,  0,  0],
+        [0, 1, 0,  0, dt,  0],
+        [0, 0, 1,  0,  0, dt] 
+        ])
+
+        Hk = np.array([
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0]
+        ])
+
+        Qk = np.diag([1, 1, 10, 100, 100, 1000])*1
+        Rk = np.eye(3) * 1
+
+        Pk = Fk @ Pk @ Fk.T + Qk
+
+        yk = x_gps - x
+        Sk = Hk @ Pk @ Hk.T + Rk
+        Kk = Pk @ Hk.T @ np.linalg.inv(Sk)
+        v_i = v_i + Kk[:3, :] @ yk
+        x = x + Kk[3:, :] @ yk
+        Pk = (np.eye(6) - Kk @ Hk) @ Pk
+
+    x_hist = x.copy()
+    visualization.history.append(x_hist)
+    visualization.update(t, x_hist, R2XYZ(ZYX2R(eul*pi/180))*180/pi)
 
     time_end = time.time()
 
     t += (time_end - time_start) * 1000
+    dt = time_end - time_start # used for kalman filter
