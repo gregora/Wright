@@ -25,7 +25,8 @@ if len(sys.argv) > 1:
 
 data = pd.read_csv(file)
 
-ground_height = 300
+ground_height = 300  # change if needed
+yaw_offset = -90     # change if needed
 
 data["Time"] = data["Time"] - data["Time"][0]
 
@@ -48,9 +49,9 @@ while True:
     altitude = np.interp(t, data["Time"], data["Altitude"])
 
     x = np.array([[latitude], [longitude], [-altitude]])
-    eul = np.array([[yaw], [pitch], [roll]])
+    eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
 
-
+    visualization.history.append(x[:,0])
     visualization.update(t, x, R2XYZ(ZYX2R(eul*pi/180))*180/pi)
 
     time_end = time.time()

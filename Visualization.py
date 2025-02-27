@@ -19,6 +19,8 @@ class Visualization:
     record = False
     surface = None
 
+    history = []
+
     def __init__(self, viewport = (800, 800), record = False, fps = 60, filename = "output.mp4"):
         pygame.init()
         self.viewport = viewport
@@ -73,6 +75,31 @@ class Visualization:
 
         glTranslate(-x[0, 0], x[1, 0], x[2, 0])
         self.ground.render()
+
+        glLineWidth(5)
+        glEnable(GL_LINE_SMOOTH)
+
+        glBegin(GL_LINES)
+        glColor3f(1, 0, 0)
+        glVertex3f(0, 0, 0)
+        glVertex3f(1, 0, 0)
+        glColor3f(0, 1, 0)
+        glVertex3f(0, 0, 0)
+        glVertex3f(0, 1, 0)
+        glColor3f(0, 0, 1)
+        glVertex3f(0, 0, 0)
+        glVertex3f(0, 0, 1)
+        glEnd()
+
+        # draw history
+
+        if len(self.history) > 1:
+            glBegin(GL_LINE_STRIP)
+            glColor3f(1, 1, 1)
+            for h in self.history:
+                glVertex3f(h[0], -h[1], -h[2])
+            glEnd()
+
         glTranslate(x[0, 0], -x[1, 0], -x[2, 0])
 
 
