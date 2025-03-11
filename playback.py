@@ -65,10 +65,12 @@ while True:
 
     eul_gyro = np.array([[yaw], [-pitch], [-roll]])
     eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
+    eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
 
     R = ZYX2R(eul_gyro*pi/180)
-    a_i = R.T @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
+    a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
     
+    # axis remapping
     a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
     a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
 
@@ -105,10 +107,11 @@ while True:
         yk = x_gps - x
         Sk = Hk @ Pk @ Hk.T + Rk
         Kk = Pk @ Hk.T @ np.linalg.inv(Sk)
-        #x = x + Kk[:3, :] @ yk
-        #v_i = v_i + Kk[3:, :] @ yk
+        x = x + Kk[:3, :] @ yk
+        v_i = v_i + Kk[3:, :] @ yk
         Pk = (np.eye(6) - Kk @ Hk) @ Pk
 
+    #x = x_gps
     x_hist = x.copy()
     visualization.history.append(x_hist)
     visualization.update(t, x_hist, R2XYZ(ZYX2R(eul*pi/180))*180/pi)

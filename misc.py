@@ -89,7 +89,7 @@ def R2ZYX(R):
         roll = 0
         yaw = atan2(R[1, 0], R[0, 0])
 
-    return np.array([[roll], [pitch], [yaw]])
+    return np.array([[yaw], [pitch], [roll]])
 
 
 def parsePolarTxt(filename):
