@@ -94,8 +94,8 @@ for i in tqdm.tqdm(range(N)):
 
         airframe.surfaces["Elevator"]["Angle"]      =   (eul[1, 0] - 10) * P + w_b[1, 0]*D
 
-        airframe.surfaces["Left Aileron"]["Angle"]  = - (eul[0, 0] - 0)*P - w_b[0,0]*D
-        airframe.surfaces["Right Aileron"]["Angle"] =   (eul[0, 0] - 0)*P - w_b[0,0]*D
+        airframe.surfaces["Left Aileron"]["Angle"]  = - (eul[2, 0] - 0)*P - w_b[0,0]*D
+        airframe.surfaces["Right Aileron"]["Angle"] =   (eul[2, 0] - 0)*P - w_b[0,0]*D
 
         if airframe.surfaces["Elevator"]["Angle"] > 0.35:
             airframe.surfaces["Elevator"]["Angle"] = 0.35
