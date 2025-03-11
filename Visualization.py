@@ -104,8 +104,8 @@ class Visualization:
 
 
         glRotate(euler[0], 1, 0, 0)
-        glRotate(-euler[1], 0, 1, 0)
-        glRotate(-euler[2], 0, 0, 1)
+        glRotate(euler[1], 0, 1, 0)
+        glRotate(euler[2], 0, 0, 1)
 
         self.obj.render()
 

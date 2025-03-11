@@ -63,7 +63,7 @@ while True:
     x_gps_prev = x_gps
     x_gps = np.array([[latitude], [longitude], [-altitude]]) # x points to north, y points to east, z points down
 
-    eul_gyro = np.array([[yaw], [-pitch], [-roll]])
+    eul_gyro = np.array([[yaw], [pitch], [roll]])
     eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
     eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
 
@@ -74,12 +74,11 @@ while True:
     a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
     a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
 
-
-    if x.all() == 0.0:
+    if x.all() <= 0.1:
         x = x_gps
     
     #x = x_gps
-    x = x + dt * v_i
+    x = x + dt * v_i + dt**2 / 2 * a_i
     v_i = v_i + dt * a_i
 
     Fk = np.array([
