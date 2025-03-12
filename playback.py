@@ -44,6 +44,8 @@ Pk = np.eye(6) * 10
 
 x_gps = None
 
+accelerations = []
+
 while True:
     time_start = time.time()
 
@@ -60,21 +62,29 @@ while True:
     a_by = np.interp(t, data["Time"], data["ay"])
     a_bz = np.interp(t, data["Time"], data["az"])
 
-    x_gps_prev = x_gps
+    x_gps_prev = x_gps.copy() if x_gps is not None else None
     x_gps = np.array([[latitude], [longitude], [-altitude]]) # x points to north, y points to east, z points down
 
     eul_gyro = np.array([[yaw], [pitch], [roll]])
-    eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
-    eul = np.array([[yaw + yaw_offset], [pitch], [roll]])
+    eul = np.array([[-yaw], [-pitch], [roll]])
 
     R = ZYX2R(eul_gyro*pi/180)
     a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
     
+
+    a_i[0, 0], a_i[1, 0] = a_i[1, 0], a_i[0, 0]
+
     # axis remapping
+    a_i[0, 0] = -a_i[0, 0] # x is not inverted in bno055
     a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
     a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
 
-    if x.all() <= 0.1:
+
+    
+
+    accelerations.append([a_bx, a_by, a_bz])
+
+    if x.all() == 0.0:
         x = x_gps
     
     #x = x_gps
@@ -97,12 +107,13 @@ while True:
     ])
 
     Qk = np.diag([100, 100, 100, 100, 100, 100])
-    Rk = np.eye(3) * 10
+    Rk = np.eye(3) * 20
 
 
     Pk = Fk @ Pk @ Fk.T + Qk
 
-    if x_gps_prev is not None and x_gps_prev.all() != x_gps.all():
+    if x_gps_prev is not None and (x_gps_prev != x_gps).any():
+        #print("GPS correction")
         yk = x_gps - x
         Sk = Hk @ Pk @ Hk.T + Rk
         Kk = Pk @ Hk.T @ np.linalg.inv(Sk)
@@ -117,5 +128,14 @@ while True:
 
     time_end = time.time()
 
-    t += (time_end - time_start) * 1000
     dt = time_end - time_start # used for kalman filter
+    dt = 30 / 1000
+
+    t += dt * 1000
+
+ 
+#accelerations = np.array(accelerations)
+#plt.plot(accelerations[:, 0])
+#plt.plot(accelerations[:, 1])
+
+#plt.show()
