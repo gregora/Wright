@@ -91,6 +91,17 @@ def R2ZYX(R):
 
     return np.array([[yaw], [pitch], [roll]])
 
+def quat2R(q):
+    q1 = q[0, 0]
+    q2 = q[1, 0]
+    q3 = q[2, 0]
+    q4 = q[3, 0]
+
+    R = np.array([[1 - 2 * q2**2 - 2 * q3**2, 2 * q1 * q2 - 2 * q3 * q4, 2 * q1 * q3 + 2 * q2 * q4],
+                    [2 * q1 * q2 + 2 * q3 * q4, 1 - 2 * q1**2 - 2 * q3**2, 2 * q2 * q3 - 2 * q1 * q4],
+                    [2 * q1 * q3 - 2 * q2 * q4, 2 * q2 * q3 + 2 * q1 * q4, 1 - 2 * q1**2 - 2 * q2**2]])
+    
+    return R
 
 def parsePolarTxt(filename):
     # Reads a txt and returns a numpy array

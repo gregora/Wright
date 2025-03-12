@@ -88,7 +88,7 @@ while True:
         x = x_gps
     
     #x = x_gps
-    x = x + dt * v_i + dt**2 / 2 * a_i
+    x = x + dt * v_i
     v_i = v_i + dt * a_i
 
     Fk = np.array([
@@ -132,7 +132,6 @@ while True:
     dt = 30 / 1000
 
     t += dt * 1000
-
  
 #accelerations = np.array(accelerations)
 #plt.plot(accelerations[:, 0])
