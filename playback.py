@@ -66,7 +66,7 @@ while True:
     x_gps = np.array([[latitude], [longitude], [-altitude]]) # x points to north, y points to east, z points down
 
     eul_gyro = np.array([[yaw], [pitch], [roll]])
-    eul = np.array([[-yaw], [-pitch], [roll]])
+    eul = np.array([[yaw], [pitch], [roll]])
 
     R = ZYX2R(eul_gyro*pi/180)
     a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
