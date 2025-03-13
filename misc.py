@@ -91,6 +91,14 @@ def R2ZYX(R):
 
     return np.array([[yaw], [pitch], [roll]])
 
+
+def normalizeQuat(q):
+    # Normalizes a quaternion
+    q = q / np.linalg.norm(q)
+
+    return q
+
+
 def quat2R(q):
     q1 = q[0, 0]
     q2 = q[1, 0]

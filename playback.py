@@ -62,20 +62,27 @@ while True:
     a_by = np.interp(t, data["Time"], data["ay"])
     a_bz = np.interp(t, data["Time"], data["az"])
 
+    q1 = np.interp(t, data["Time"], data["q1"])
+    q2 = np.interp(t, data["Time"], data["q2"])
+    q3 = np.interp(t, data["Time"], data["q3"])
+    q4 = np.interp(t, data["Time"], data["q4"])
+
+
     x_gps_prev = x_gps.copy() if x_gps is not None else None
     x_gps = np.array([[latitude], [longitude], [-altitude]]) # x points to north, y points to east, z points down
 
     eul_gyro = np.array([[yaw], [pitch], [roll]])
     eul = np.array([[yaw], [pitch], [roll]])
 
-    R = ZYX2R(eul_gyro*pi/180)
-    a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
-    
+    #R = ZYX2R(eul_gyro*pi/180)
 
-    a_i[0, 0], a_i[1, 0] = a_i[1, 0], a_i[0, 0]
+    q = normalizeQuat(np.array([[q1], [q2], [q3], [q4]]))
+    R = quat2R(q)
+    a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
+
 
     # axis remapping
-    a_i[0, 0] = -a_i[0, 0] # x is not inverted in bno055
+    a_i[0, 0] =  a_i[0, 0] # x is not inverted in bno055
     a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
     a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
 
@@ -129,7 +136,7 @@ while True:
     time_end = time.time()
 
     dt = time_end - time_start # used for kalman filter
-    dt = 30 / 1000
+    #dt = 30 / 1000
 
     t += dt * 1000
  
