@@ -32,7 +32,7 @@ data["Time"] = data["Time"] - data["Time"][0]
 
 data["Altitude"] = data["Altitude"] - ground_height
 data["Latitude"]  = (data["Latitude"]  - data["Latitude"][0])  * 40_075 * 1000 / 360
-data["Longitude"] = (data["Longitude"] - data["Longitude"][0]) * 40_075 * 1000 / 360
+data["Longitude"] = (data["Longitude"] - data["Longitude"][0]) * 40_075 * 1000 / 360 * np.cos(data["Latitude"][0] * pi / 180)
 
 v_i = np.zeros((3, 1))
 x = np.zeros((3, 1))
@@ -80,11 +80,10 @@ while True:
     R = quat2R(q)
     a_i = R @ np.array([[a_bx], [a_by], [a_bz]]) # body frame acceleration to inertial frame
 
-
     # axis remapping
     a_i[0, 0] =  a_i[0, 0] # x is not inverted in bno055
-    a_i[1, 0] = -a_i[1, 0] # y is inverted in bno055
-    a_i[2, 0] = -a_i[2, 0] # z is inverted in bno055
+    a_i[1, 0] =  -a_i[1, 0] # y is inverted in bno055
+    a_i[2, 0] =  -a_i[2, 0] # z is inverted in bno055
 
 
     
