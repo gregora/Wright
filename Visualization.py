@@ -103,9 +103,9 @@ class Visualization:
         glTranslate(x[0, 0], -x[1, 0], -x[2, 0])
 
 
-        glRotate(euler[0], 1, 0, 0)
-        glRotate(euler[1], 0, 1, 0)
-        glRotate(euler[2], 0, 0, 1)
+        glRotate( euler[0], 1, 0, 0)
+        glRotate(-euler[1], 0, 1, 0)
+        glRotate(-euler[2], 0, 0, 1)
 
         self.obj.render()
 
