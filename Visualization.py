@@ -40,8 +40,8 @@ class Visualization:
         glShadeModel(GL_SMOOTH)
 
         # LOAD OBJECT AFTER PYGAME INIT
-        self.obj = OBJ("CAD/plane.obj", swapyz=True)
-        self.obj.generate()
+        self.plane = OBJ("CAD/Chonkyv2.obj", swapyz=True)
+        self.plane.generate()
         
         self.ground = OBJ("CAD/ground.obj", swapyz=True)
         self.ground.generate()
@@ -66,7 +66,7 @@ class Visualization:
         glLoadIdentity()
   
 
-        glTranslate(0.0, 0.0, -5)
+        glTranslate(0.0, 0.0, -2)
 
         glRotate(-70, 1, 0, 0)
 
@@ -105,9 +105,9 @@ class Visualization:
 
         glRotate( euler[0], 1, 0, 0)
         glRotate(-euler[1], 0, 1, 0)
-        glRotate(-euler[2], 0, 0, 1)
+        glRotate(-euler[2] - 90, 0, 0, 1)
 
-        self.obj.render()
+        self.plane.render()
 
 
 
