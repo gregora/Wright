@@ -15,7 +15,9 @@ import pygame
 
 airframe = Airframe.from_json("rc.json")
 
+#print(f"Mass          : {airframe.m:.2f} kg")
 #print(f"Center of mass: {airframe.cm[0, 0]:.2f} m")
+
 FPS = 30
 
 visualization = Visualization(record=False, fps=FPS)

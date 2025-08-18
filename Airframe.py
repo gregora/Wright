@@ -101,7 +101,7 @@ class Airframe:
                     drag_vector = -np.array([[cos(alpha_s)], [-sin(alpha_s)], [0]]) * drag
                     lift_vector = -np.array([[sin(alpha_s)], [cos(alpha_s)], [0]]) * lift
 
-
+            
                 force_b += drag_vector + lift_vector
 
                 torque_s = np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
@@ -131,12 +131,12 @@ class Airframe:
 
                 torque_b += np.array([np.cross(motor["Position"][:, 0], motor["Thrust"] * np.array([[1], [0], [0]])[:, 0])]).T
 
-
+            # force of gravity
             g_b = R.T @ self.g_i
             torque_b += np.array([np.cross(self.cm[:, 0], self.m * g_b[:, 0])]).T
 
             force_b += self.m * g_b
-            
+
 
             force_i = R @ force_b
             torque_i = R @ torque_b
