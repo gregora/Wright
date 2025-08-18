@@ -14,7 +14,7 @@ class Visualization:
 
     obj = None
     ground = None
-    camera_pos = np.array([0, 0, 0])
+    camera_rot = np.array([0, 0, 0])
     rotate = False
     record = False
     surface = None
@@ -70,8 +70,8 @@ class Visualization:
 
         glRotate(-70, 1, 0, 0)
 
-        glRotate(self.camera_pos[0], 0, 0, 1)
-        glRotate(self.camera_pos[1], 1, 0, 0)
+        glRotate(self.camera_rot[1], 1, 0, 0)
+        glRotate(self.camera_rot[0], 0, 0, 1)
 
         glTranslate(-x[0, 0], x[1, 0], x[2, 0])
         self.ground.render()
@@ -134,8 +134,8 @@ class Visualization:
             elif event.type == pygame.MOUSEMOTION:
                 i, j = event.rel
                 if self.rotate:
-                    self.camera_pos[0] += i
-                    self.camera_pos[1] += j
+                    self.camera_rot[0] += i
+                    self.camera_rot[1] += j
 
 
 
