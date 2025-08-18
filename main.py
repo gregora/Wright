@@ -14,7 +14,11 @@ from Visualization import Visualization
 import pygame
 
 airframe = Airframe.from_json("rc.json")
-visualization = Visualization(record=False, fps=100)
+
+#print(f"Center of mass: {airframe.cm[0, 0]:.2f} m")
+FPS = 30
+
+visualization = Visualization(record=False, fps=FPS)
 
 attitudes = []
 positions = []
@@ -37,9 +41,10 @@ airframe.attitude[2, 0] = 0
 #airframe.motors["Motor"]["Thrust"] = 0
 #airframe.motors["Motor"]["Torque"] = 0
 
-dt = 0.0005
+dt = 0.005
+T = 15 # seconds
 
-N = 60_000
+N = int(T / dt)
 
 
 for i in tqdm.tqdm(range(N)):
@@ -49,7 +54,7 @@ for i in tqdm.tqdm(range(N)):
     if(np.isnan(airframe.attitude).any()):
         break
 
-    if i % 20 == 0:
+    if i % int(1 / (dt * FPS)) == 0:
 
         # add random wind
         airframe.v_i += np.random.randn(3, 1) * 0.1
@@ -124,7 +129,7 @@ positions = np.array(positions)
 velocities = np.array(velocities)
 commands = np.array(commands)
 
-T = np.linspace(0, dt*20*len(attitudes), len(attitudes))
+T = np.linspace(0, dt*int(1 / (dt * FPS))*len(attitudes), len(attitudes))
 
 plt.subplot(2, 2, 1)
 

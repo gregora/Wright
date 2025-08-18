@@ -1,64 +1,64 @@
 {
     "Surfaces": {
         "Left Wing": {
-            "Position": [[0], [-0.25], [0]],
-            "Area": 0.0576,
+            "Position": [[-0.245], [-0.61], [0]],
+            "Area": 0.1098,
             "Type": "Positive",
             "Angle": 0.0,
             "Vertical": false
         },
         "Right Wing": {
-            "Position": [[0], [0.25], [0]],
-            "Area": 0.0576,
+            "Position": [[-0.245], [0.61], [0]],
+            "Area": 0.1098,
             "Type": "Positive",
             "Angle": 0.0,
             "Vertical": false
         },
         "Horizontal Stabilizer": {
-            "Position": [[-0.5], [0], [0]],
-            "Area": 0.015,
+            "Position": [[-0.715], [0], [0]],
+            "Area": 0.032,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
         "Vertical Stabilizer": {
-            "Position": [[-0.5], [0], [-0.2]],
-            "Area": 0.0168,
+            "Position": [[-0.715], [0], [-0.2]],
+            "Area": 0.018,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true
         },
         "Fuselage": {
-            "Position": [[0], [0], [0.035]],
-            "Area": 0.049,
+            "Position": [[-0.325], [0], [0]],
+            "Area": 0.0335,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
         "Left Aileron": {
-            "Position": [[0], [-0.3], [0]],
-            "Area": 0.0075,
+            "Position": [[0], [-0.51], [0]],
+            "Area": 0.003,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
         "Right Aileron": {
-            "Position": [[0], [0.3], [0]],
-            "Area": 0.0075,
+            "Position": [[0], [0.51], [0]],
+            "Area": 0.003,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
         "Elevator": {
-            "Position": [[-0.5], [0], [0]],
-            "Area": 0.015,
+            "Position": [[-0.815], [0], [0]],
+            "Area": 0.0224,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": false
         },
         "Rudder": {
-            "Position": [[-0.5], [0], [-0.2]],
-            "Area": 0.0084,
+            "Position": [[-0.815], [0], [-0.2]],
+            "Area": 0.018,
             "Type": "Symetric",
             "Angle": 0.0,
             "Vertical": true
@@ -68,43 +68,43 @@
 
     "Masses": {
         "Battery": {
-            "Position": [[0.15], [0], [0.03]],
-            "Mass": 0.147
+            "Position": [[-0.1], [0], [0]],
+            "Mass": 0.090
         },
         "Motor": {
-            "Position": [[0.35], [0], [-0.02]],
-            "Mass": 0.064
+            "Position": [[-0.02], [0], [-0.02]],
+            "Mass": 0.054
         },
         "ESC": {
-            "Position": [[0.25], [0], [-0.04]],
-            "Mass": 0.038
+            "Position": [[-0.2], [0], [-0.04]],
+            "Mass": 0.025
         },
         "Flight Controller": {
             "Position": [[-0.30], [0], [0]],
-            "Mass": 0.07
+            "Mass": 0.01
         },
         "Receiver": {
-            "Position": [[0.0], [0], [0]],
+            "Position": [[0.30], [0], [0]],
             "Mass": 0.02
         },
         "Left Wing": {
-            "Position": [[0], [-0.5], [0]],
-            "Mass": 0.05
+            "Position": [[-0.245], [-0.61], [0]],
+            "Mass": 0.06
         },
         "Right Wing": {
-            "Position": [[0], [0.5], [0]],
-            "Mass": 0.05
+            "Position": [[-0.245], [0.61], [0]],
+            "Mass": 0.06
         },
         "Horizontal Stabilizer": {
-            "Position": [[-0.5], [0], [0]],
-            "Mass": 0.03
+            "Position": [[-0.715], [0], [0]],
+            "Mass": 0.035
         },
         "Vertical Stabilizer": {
-            "Position": [[-0.5], [0], [-0.2]],
-            "Mass": 0.03
+            "Position": [[-0.715], [0], [-0.2]],
+            "Mass": 0.035
         },
         "Fuselage": {
-            "Position": [[0], [0], [0.1]],
+            "Position": [[-0.2], [0], [0.1]],
             "Mass": 0.18
         },
         "Nose": {
@@ -116,8 +116,8 @@
     
     "Motors": {
         "Motor": {
-            "Position": [[0.5], [0], [-0.02]],
-            "Thrust": 4,
+            "Position": [[0], [0], [0]],
+            "Thrust": 6,
             "Torque": -0.01
         }
     }
