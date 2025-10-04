@@ -48,8 +48,43 @@ T = 15 # seconds
 
 N = int(T / dt)
 
+elevator_request = 0
+aileron_request = 0
 
 for i in tqdm.tqdm(range(N)):
+
+    if airframe.surfaces["Elevator"]["Angle"] > 0.60:
+        airframe.surfaces["Elevator"]["Angle"] = 0.60
+    elif airframe.surfaces["Elevator"]["Angle"] < -0.60:
+        airframe.surfaces["Elevator"]["Angle"] = -0.60
+
+    if airframe.surfaces["Left Aileron"]["Angle"] > 0.60:
+        airframe.surfaces["Left Aileron"]["Angle"] = 0.60
+    elif airframe.surfaces["Left Aileron"]["Angle"] < -0.60:
+        airframe.surfaces["Left Aileron"]["Angle"] = -0.60
+
+    if airframe.surfaces["Right Aileron"]["Angle"] > 0.60:
+        airframe.surfaces["Right Aileron"]["Angle"] = 0.60
+    elif airframe.surfaces["Right Aileron"]["Angle"] < -0.60:
+        airframe.surfaces["Right Aileron"]["Angle"] = -0.60
+
+    e_elevator = elevator_request - airframe.surfaces["Elevator"]["Angle"]
+    e_aileron  = aileron_request  - airframe.surfaces["Right Aileron"]["Angle"]
+
+    # limit servo actuation speed
+    servo_speed = 100.0 # deg / s
+    d_elevator = dt * np.sign(e_elevator) * servo_speed * pi / 180.0
+    d_aileron  = dt * np.sign(e_aileron)  * servo_speed * pi / 180.0
+
+    if abs(d_elevator) > abs(e_elevator):
+        d_elevator = e_elevator
+    if abs(d_aileron) > abs(e_aileron):
+        d_aileron = e_aileron
+
+    airframe.surfaces["Elevator"]["Angle"] += d_elevator
+    airframe.surfaces["Left Aileron"]["Angle"] -= d_aileron
+    airframe.surfaces["Right Aileron"]["Angle"] += d_aileron
+
 
     airframe.physics(dt)
 
@@ -59,7 +94,7 @@ for i in tqdm.tqdm(range(N)):
     if i % int(1 / (dt * FPS)) == 0:
 
         # add random wind
-        # airframe.v_i += np.random.randn(3, 1) * 0.1
+        airframe.v_i += np.random.normal(0, 0.5)
 
 
         positions.append(airframe.x_i.copy())
@@ -73,57 +108,35 @@ for i in tqdm.tqdm(range(N)):
 
         # left arrow
         if pygame.key.get_pressed()[pygame.K_LEFT]:
-            airframe.surfaces["Left Aileron"]["Angle"] = -0.35 / 2
-            airframe.surfaces["Right Aileron"]["Angle"] = 0.35 / 2
+            airframe.surfaces["Left Aileron"]["Angle"] = -0.60 / 2
+            airframe.surfaces["Right Aileron"]["Angle"] = 0.60 / 2
         # right arrow
         elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-            airframe.surfaces["Left Aileron"]["Angle"] = 0.35 / 2
-            airframe.surfaces["Right Aileron"]["Angle"] = -0.35 / 2
-        else:
-           airframe.surfaces["Left Aileron"]["Angle"] = 0
-           airframe.surfaces["Right Aileron"]["Angle"] = 0
+            airframe.surfaces["Left Aileron"]["Angle"] = 0.60 / 2
+            airframe.surfaces["Right Aileron"]["Angle"] = -0.60 / 2
 
         # up arrow
         if pygame.key.get_pressed()[pygame.K_UP]:
-            airframe.surfaces["Elevator"]["Angle"] = 0.35 / 2
+            airframe.surfaces["Elevator"]["Angle"] = 0.60 / 2
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
-            airframe.surfaces["Elevator"]["Angle"] = -0.35 / 2
-        else:
-            airframe.surfaces["Elevator"]["Angle"] = 0
+            airframe.surfaces["Elevator"]["Angle"] = -0.60 / 2
 
         eul, w_b = airframe.sensor_data()
 
         eul = eul * 180 / pi
 
-        eul_noise = np.random.normal(0, 2, size = (3, 1))   # angle nosise in deg
-        w_b_noise = np.random.normal(0, 0.1, size = (3, 1)) # angular velocity noise in rad / s
+        eul_noise = np.random.normal(0, 0.5, size = (3, 1)) # angle nosise in deg
+        w_b_noise = np.random.normal(0, 0.05, size = (3, 1)) # angular velocity noise in rad / s
 
         eul += eul_noise
         w_b += w_b_noise
 
         # control law imitation
-        P = 4.0 / 90            * 0.35
-        D = 0.1 / (4 * 3.14)    * 0.35
+        P = 3.0 / 90              * 0.60
+        D = 0.005 / (4 * 3.14)    * 0.60
 
-        airframe.surfaces["Elevator"]["Angle"]      =   (eul[1, 0] - 10) * P + w_b[1, 0]*D
-
-        airframe.surfaces["Left Aileron"]["Angle"]  = - (eul[2, 0] - 0)*P - w_b[0,0]*D
-        airframe.surfaces["Right Aileron"]["Angle"] =   (eul[2, 0] - 0)*P - w_b[0,0]*D
-
-        if airframe.surfaces["Elevator"]["Angle"] > 0.35:
-            airframe.surfaces["Elevator"]["Angle"] = 0.35
-        elif airframe.surfaces["Elevator"]["Angle"] < -0.35:
-            airframe.surfaces["Elevator"]["Angle"] = -0.35
-
-        if airframe.surfaces["Left Aileron"]["Angle"] > 0.35:
-            airframe.surfaces["Left Aileron"]["Angle"] = 0.35
-        elif airframe.surfaces["Left Aileron"]["Angle"] < -0.35:
-            airframe.surfaces["Left Aileron"]["Angle"] = -0.35
-
-        if airframe.surfaces["Right Aileron"]["Angle"] > 0.35:
-            airframe.surfaces["Right Aileron"]["Angle"] = 0.35
-        elif airframe.surfaces["Right Aileron"]["Angle"] < -0.35:
-            airframe.surfaces["Right Aileron"]["Angle"] = -0.35
+        elevator_request = (eul[1, 0] - 10)*P + w_b[1, 0]*D
+        aileron_request  = (eul[2, 0] -  0)*P + w_b[0, 0]*D
 
         attitudes.append(eul)
         commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])
@@ -141,9 +154,9 @@ T = np.linspace(0, dt*int(1 / (dt * FPS))*len(attitudes), len(attitudes))
 
 plt.subplot(2, 2, 1)
 
-plt.plot(T, attitudes[:, 0], label="Roll")
+plt.plot(T, attitudes[:, 0], label="Yaw")
 plt.plot(T, attitudes[:, 1], label="Pitch")
-plt.plot(T, attitudes[:, 2], label="Yaw")
+plt.plot(T, attitudes[:, 2], label="Roll")
 
 plt.legend()
 

@@ -175,7 +175,7 @@ class Airframe:
 
         w_b = R.T @ self.w_i.copy()
 
-        return R2ZYX(R), w_b
+        return R2ZYX(R).copy(), w_b.copy()
 
     def from_json(file):
         with open(file, 'r') as f:
