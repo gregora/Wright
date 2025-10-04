@@ -15,8 +15,8 @@ import pygame
 
 airframe = Airframe.from_json("rc.json")
 
-#print(f"Mass          : {airframe.m:.2f} kg")
-#print(f"Center of mass: {airframe.cm[0, 0]:.2f} m")
+print(f"Mass          : {airframe.m:.2f} kg")
+print(f"Center of mass: {airframe.cm[0, 0]:.2f} m")
 
 FPS = 30
 
@@ -35,15 +35,15 @@ airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
 airframe.v_i[2, 0] = -1
 
-airframe.attitude[0, 0] = 0.0
-airframe.attitude[1, 0] = 0.2
-airframe.attitude[2, 0] = 0
+airframe.attitude[0, 0] = 0.3
+airframe.attitude[1, 0] = 0.0
+airframe.attitude[2, 0] = 0.0
 
 # turn off the motor
 #airframe.motors["Motor"]["Thrust"] = 0
 #airframe.motors["Motor"]["Torque"] = 0
 
-dt = 0.005
+dt = 0.001
 T = 15 # seconds
 
 N = int(T / dt)
@@ -69,17 +69,17 @@ for i in tqdm.tqdm(range(N)):
         airframe.surfaces["Right Aileron"]["Angle"] = -0.60
 
     e_elevator = elevator_request - airframe.surfaces["Elevator"]["Angle"]
-    e_aileron  = aileron_request  - airframe.surfaces["Right Aileron"]["Angle"]
+    e_aileron  = aileron_request*2  - airframe.surfaces["Right Aileron"]["Angle"]
 
     # limit servo actuation speed
-    servo_speed = 100.0 # deg / s
+    servo_speed = 50.0 # deg / s
     d_elevator = dt * np.sign(e_elevator) * servo_speed * pi / 180.0
     d_aileron  = dt * np.sign(e_aileron)  * servo_speed * pi / 180.0
 
-    if abs(d_elevator) > abs(e_elevator):
-        d_elevator = e_elevator
-    if abs(d_aileron) > abs(e_aileron):
-        d_aileron = e_aileron
+    #if abs(d_elevator) > abs(e_elevator):
+    #    d_elevator = e_elevator
+    #if abs(d_aileron) > abs(e_aileron):
+    #    d_aileron = e_aileron
 
     airframe.surfaces["Elevator"]["Angle"] += d_elevator
     airframe.surfaces["Left Aileron"]["Angle"] -= d_aileron
@@ -94,7 +94,7 @@ for i in tqdm.tqdm(range(N)):
     if i % int(1 / (dt * FPS)) == 0:
 
         # add random wind
-        airframe.v_i += np.random.normal(0, 0.5)
+        #airframe.v_i += np.random.normal(0, 0.1)
 
 
         positions.append(airframe.x_i.copy())
@@ -125,14 +125,14 @@ for i in tqdm.tqdm(range(N)):
 
         eul = eul * 180 / pi
 
-        eul_noise = np.random.normal(0, 0.5, size = (3, 1)) # angle nosise in deg
-        w_b_noise = np.random.normal(0, 0.05, size = (3, 1)) # angular velocity noise in rad / s
+        eul_noise = np.random.normal(0, 1.0, size = (3, 1)) # angle nosise in deg
+        w_b_noise = np.random.normal(0, 0.2, size = (3, 1)) # angular velocity noise in rad / s
 
         eul += eul_noise
         w_b += w_b_noise
 
         # control law imitation
-        P = 3.0 / 90              * 0.60
+        P = 1.0 / 90              * 0.60
         D = 0.005 / (4 * 3.14)    * 0.60
 
         elevator_request = (eul[1, 0] - 10)*P + w_b[1, 0]*D

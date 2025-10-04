@@ -154,6 +154,10 @@ def symetricC(alpha):
     Cl = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 1])
     Cd = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 2])
 
+    if abs(alpha) > 10:
+        Cl = alpha * 0.07
+        Cd = abs(alpha) * 0.012
+
     return Cl, Cd
 
 # NACA 2415 airfoil
