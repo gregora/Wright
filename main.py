@@ -59,7 +59,7 @@ for i in tqdm.tqdm(range(N)):
     if i % int(1 / (dt * FPS)) == 0:
 
         # add random wind
-        airframe.v_i += np.random.randn(3, 1) * 0.1
+        # airframe.v_i += np.random.randn(3, 1) * 0.1
 
 
         positions.append(airframe.x_i.copy())
@@ -94,6 +94,12 @@ for i in tqdm.tqdm(range(N)):
         eul, w_b = airframe.sensor_data()
 
         eul = eul * 180 / pi
+
+        eul_noise = np.random.normal(0, 2, size = (3, 1))   # angle nosise in deg
+        w_b_noise = np.random.normal(0, 0.1, size = (3, 1)) # angular velocity noise in rad / s
+
+        eul += eul_noise
+        w_b += w_b_noise
 
         # control law imitation
         P = 4.0 / 90            * 0.35

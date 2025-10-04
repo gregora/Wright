@@ -127,7 +127,7 @@ while True:
         v_i = v_i + Kk[3:, :] @ yk
         Pk = (np.eye(6) - Kk @ Hk) @ Pk
 
-    #x = x_gps
+    x = x_gps
     x_hist = x.copy()
     visualization.history.append(x_hist)
     visualization.update(t, x_hist, R2XYZ(ZYX2R(eul*pi/180))*180/pi)
