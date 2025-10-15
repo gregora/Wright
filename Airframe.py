@@ -9,6 +9,7 @@ import json
 class Airframe:
     x_i = np.zeros((3, 1)) # inertial position
     attitude = np.zeros((3, 1)) # attitude as euler angles (Roll - Pitch - Yaw)
+    quaternion = np.zeros((4, 1)) # attitude as quaternion
 
     v_i = np.zeros((3, 1)) # inertial velocities
     w_i = np.zeros((3, 1)) # inertial angular velocities

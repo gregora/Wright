@@ -111,6 +111,37 @@ def quat2R(q):
     
     return R
 
+def R2quat(R):
+    q4 = 0.5 * np.sqrt(1 + R[0, 0] + R[1, 1] + R[2, 2])
+    q1 = (R[2, 1] - R[1, 2]) / (4 * q4)
+    q2 = (R[0, 2] - R[2, 0]) / (4 * q4)
+    q3 = (R[1, 0] - R[0, 1]) / (4 * q4)
+
+    q = np.array([[q1], [q2], [q3], [q4]])
+
+    return normalizeQuat(q)
+
+
+def dQuat(q, w_b):
+    # Returns the time derivative of a quaternion given the angular velocity in body frame
+
+    q1 = q[0, 0]
+    q2 = q[1, 0]
+    q3 = q[2, 0]
+    q4 = q[3, 0]
+
+    p = w_b[0, 0]
+    q_ = w_b[1, 0]
+    r = w_b[2, 0]
+
+    dq = 0.5 * np.array([[0, -p, -q_, -r],
+                         [p, 0, r, -q_],
+                         [q_, -r, 0, p],
+                         [r, q_, -p, 0]]) @ q
+
+    return dq
+
+
 def parsePolarTxt(filename):
     # Reads a txt and returns a numpy array
 
