@@ -154,18 +154,18 @@ class Airframe:
 
         a_i = force_i / self.m
 
-        print(f"Torque in body frame: {torque_b.T}")
+        #print(f"Torque in body frame: {torque_b.T}")
 
         # because center of body is not in the center of mass, we have to take into account the acceleration of the center of mass 
-        #torque_i = torque_i - np.array([np.cross(self.cm[:, 0], force_i[:, 0])]).T
+        torque_i = torque_i - np.array([np.cross(self.cm[:, 0], force_i[:, 0])]).T
         
-        print(f"Torque in inertial frame: {torque_i.T}")
+        #print(f"Torque in inertial frame: {torque_i.T}")
 
         
         # calculate angular acceleration from torque 
         alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
 
-        print(f"Angular acceleration in inertial frame: {alpha_i.T}")
+        #print(f"Angular acceleration in inertial frame: {alpha_i.T}")
 
         self.v_i += a_i * dt
         self.w_i += alpha_i * dt

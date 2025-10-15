@@ -127,9 +127,9 @@ def dQuat(q, w_b, dt):
     # Returns the time derivative of a quaternion given the angular velocity in body frame
 
     Omega = np.array([[0, -w_b[0, 0], -w_b[1, 0], -w_b[2, 0]],
-                      [w_b[0, 0], 0, w_b[2, 0], -w_b[1, 0]],
-                      [w_b[1, 0], -w_b[2, 0], 0, w_b[0, 0]],
-                      [w_b[2, 0], w_b[1, 0], -w_b[0, 0], 0]])
+                      [w_b[0, 0], 0, -w_b[2, 0], w_b[1, 0]],
+                      [w_b[1, 0], w_b[2, 0], 0, -w_b[0, 0]],
+                      [w_b[2, 0], -w_b[1, 0], w_b[0, 0], 0]])
     dq = dt * 0.5 * Omega @ q
 
     return dq
