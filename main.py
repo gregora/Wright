@@ -35,10 +35,6 @@ airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
 airframe.v_i[2, 0] = -1
 
-airframe.attitude[0, 0] = 0.9
-airframe.attitude[1, 0] = 0.0
-airframe.attitude[2, 0] = 0.0
-
 # turn off the motor
 #airframe.motors["Motor"]["Thrust"] = 0
 #airframe.motors["Motor"]["Torque"] = 0
@@ -131,8 +127,8 @@ for i in tqdm.tqdm(range(N)):
         eul_noise = np.random.normal(0, 1.0, size = (3, 1)) # angle nosise in deg
         w_b_noise = np.random.normal(0, 5, size = (3, 1)) # angular velocity noise in deg / s
 
-        eul += eul_noise
-        w_b += w_b_noise
+        #eul += eul_noise
+        #w_b += w_b_noise
 
         # control law imitation
         P_ailer = 0.0110    * 0.60
@@ -141,8 +137,8 @@ for i in tqdm.tqdm(range(N)):
         P_elev  = 0.0200     * 0.60
         D_elev  = 0.0040     * 0.60
 
-        aileron_request  = (eul[2, 0] -  50)*P_ailer + w_b[0, 0]*D_ailer
-        elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
+        #aileron_request  = (eul[2, 0] -  0)*P_ailer + w_b[0, 0]*D_ailer
+        #elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
 
         commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])
 

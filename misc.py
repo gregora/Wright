@@ -100,44 +100,37 @@ def normalizeQuat(q):
 
 
 def quat2R(q):
-    q1 = q[0, 0]
-    q2 = q[1, 0]
-    q3 = q[2, 0]
-    q4 = q[3, 0]
+    # Converts a quaternion to a rotation matrix
+    w = q[0, 0]
+    x = q[1, 0]
+    y = q[2, 0]
+    z = q[3, 0]
 
-    R = np.array([[1 - 2 * q2**2 - 2 * q3**2, 2 * q1 * q2 - 2 * q3 * q4, 2 * q1 * q3 + 2 * q2 * q4],
-                    [2 * q1 * q2 + 2 * q3 * q4, 1 - 2 * q1**2 - 2 * q3**2, 2 * q2 * q3 - 2 * q1 * q4],
-                    [2 * q1 * q3 - 2 * q2 * q4, 2 * q2 * q3 + 2 * q1 * q4, 1 - 2 * q1**2 - 2 * q2**2]])
-    
+    R = np.array([[1 - 2 * (y**2 + z**2), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+                    [2 * (x * y + z * w), 1 - 2 * (x**2 + z**2), 2 * (y * z - x * w)],
+                    [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x**2 + y**2)]])
+
     return R
 
 def R2quat(R):
-    q4 = 0.5 * np.sqrt(1 + R[0, 0] + R[1, 1] + R[2, 2])
-    q1 = (R[2, 1] - R[1, 2]) / (4 * q4)
-    q2 = (R[0, 2] - R[2, 0]) / (4 * q4)
-    q3 = (R[1, 0] - R[0, 1]) / (4 * q4)
-
-    q = np.array([[q1], [q2], [q3], [q4]])
+    # Converts a rotation matrix to a quaternion
+    q = np.zeros((4, 1))
+    q[0, 0] = 0.5 * np.sqrt(1 + R[0, 0] + R[1, 1] + R[2, 2]) # w
+    q[1, 0] = (R[2, 1] - R[1, 2]) / (4 * q[0, 0]) # x
+    q[2, 0] = (R[0, 2] - R[2, 0]) / (4 * q[0, 0]) # y
+    q[3, 0] = (R[1, 0] - R[0, 1]) / (4 * q[0, 0]) # z
 
     return normalizeQuat(q)
 
 
-def dQuat(q, w_b):
+def dQuat(q, w_b, dt):
     # Returns the time derivative of a quaternion given the angular velocity in body frame
 
-    q1 = q[0, 0]
-    q2 = q[1, 0]
-    q3 = q[2, 0]
-    q4 = q[3, 0]
-
-    p = w_b[0, 0]
-    q_ = w_b[1, 0]
-    r = w_b[2, 0]
-
-    dq = 0.5 * np.array([[0, -p, -q_, -r],
-                         [p, 0, r, -q_],
-                         [q_, -r, 0, p],
-                         [r, q_, -p, 0]]) @ q
+    Omega = np.array([[0, -w_b[0, 0], -w_b[1, 0], -w_b[2, 0]],
+                      [w_b[0, 0], 0, w_b[2, 0], -w_b[1, 0]],
+                      [w_b[1, 0], -w_b[2, 0], 0, w_b[0, 0]],
+                      [w_b[2, 0], w_b[1, 0], -w_b[0, 0], 0]])
+    dq = dt * 0.5 * Omega @ q
 
     return dq
 
@@ -185,9 +178,10 @@ def symetricC(alpha):
     Cl = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 1])
     Cd = np.interp(alpha, NACA0006[:, 0], NACA0006[:, 2])
 
-    if abs(alpha) > 10:
-        Cl = alpha * 0.07
-        Cd = abs(alpha) * 0.012
+    # optimistic linear region
+    #if abs(alpha) > 10:
+    #    Cl = alpha * 0.07
+    #    Cd = abs(alpha) * 0.012
 
     return Cl, Cd
 
