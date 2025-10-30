@@ -60,7 +60,7 @@ class Airframe:
 
     def physics(self, dt):
 
-        R = quat2R(self.quaternion)
+        R = quat2R(self.quaternion).T
 
         # THIS HAS TO BE R.T BECAUSE YOU NEED TO CALCULATE HOW VECTOR WOULD LOOK IN BODY FRAME
         # NOT HOW TO TRANSFORM THE VECTOR FROM INERTIAL TO BODY FRAME
@@ -71,7 +71,7 @@ class Airframe:
         force_b = np.array([[0.0], [0.0], [0.0]])
 
 
-        for surface in self.surfaces.values():
+        for surface_name, surface in self.surfaces.items():
 
             # calculate surface velocity
             v_s = np.cross(w_b[:, 0], surface["Position"][:, 0] - self.cm[:, 0])
@@ -85,30 +85,33 @@ class Airframe:
             if surface["Vertical"]:
                 alpha_s, beta_s = beta_s, alpha_s
 
-            alpha_s += surface["Angle"]
-
-            print(alpha_s)
-
             if surface["Type"] == "Symetric":
-                Cl, Cd = symetricC(alpha_s)
+                Cl, Cd = symetricC(alpha_s + surface["Angle"])
             elif surface["Type"] == "Positive":
-                Cl, Cd = positiveC(alpha_s)
+                Cl, Cd = positiveC(alpha_s + surface["Angle"])
             elif surface["Type"] == "Negative":
-                Cl, Cd = negativeC(alpha_s)
+                Cl, Cd = negativeC(alpha_s + surface["Angle"])
+
+            drag_vector = np.zeros((3, 1))
+            lift_vector = np.zeros((3, 1))
+
 
             if not surface["Vertical"]:
                 lift = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[2, 0]**2) * surface["Area"] * Cl
                 drag = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[2, 0]**2) * surface["Area"] * Cd
 
                 drag_vector = -np.array([[cos(alpha_s)], [0], [-sin(alpha_s)]]) * drag
-                lift_vector = -np.array([[sin(alpha_s)], [0], [cos(alpha_s)]]) * lift
+                lift_vector =  np.array([[sin(alpha_s)], [0], [-cos(alpha_s)]]) * lift
 
             if surface["Vertical"]:
+                print(surface_name)
+                print(alpha_s)
+                print(beta_s)
                 lift = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[1, 0]**2) * surface["Area"] * Cl
                 drag = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[1, 0]**2) * surface["Area"] * Cd
 
                 drag_vector = -np.array([[cos(alpha_s)], [-sin(alpha_s)], [0]]) * drag
-                lift_vector = -np.array([[sin(alpha_s)], [cos(alpha_s)], [0]]) * lift
+                lift_vector =  np.array([[sin(alpha_s)], [cos(alpha_s)], [0]]) * lift
 
         
             force_b += drag_vector + lift_vector
@@ -138,8 +141,6 @@ class Airframe:
             force_b += motor["Thrust"] * np.array([[1], [0], [0]])
             torque_b += motor["Torque"] * np.array([[1], [0], [0]])
 
-            torque_b += np.array([np.cross(motor["Position"][:, 0] - self.cm[:, 0], motor["Thrust"] * np.array([[1], [0], [0]])[:, 0])]).T
-        
 
         # force of gravity
         g_b = R.T @ self.g_i

@@ -94,8 +94,6 @@ for i in tqdm.tqdm(range(N)):
         positions.append(airframe.x_i.copy())
         velocities.append(airframe.v_i.copy())
 
-        visualization.history.append(airframe.x_i.copy()[:,0])
-        visualization.update(i*dt, airframe.x_i, airframe.attitude*180/pi)
 
         
         pygame.key.get_pressed()
@@ -117,6 +115,9 @@ for i in tqdm.tqdm(range(N)):
 
         eul, w_b = airframe.sensor_data()
 
+        visualization.history.append(airframe.x_i.copy()[:,0])
+        visualization.update(i*dt, airframe.x_i, eul*180/pi)
+
         eul = eul * 180 / pi
         w_b = w_b * 180 / pi
 
@@ -135,7 +136,7 @@ for i in tqdm.tqdm(range(N)):
         P_elev  = 0.0200     * 0.60
         D_elev  = 0.0040     * 0.60
 
-        #aileron_request  = (eul[2, 0] -  0)*P_ailer + w_b[0, 0]*D_ailer
+        #aileron_request  = (eul[0, 0] -  30)*P_ailer + w_b[0, 0]*D_ailer
         #elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
 
         commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])
@@ -153,9 +154,9 @@ T = np.linspace(0, dt*int(1 / (dt * FPS))*len(attitudes), len(attitudes))
 
 plt.subplot(2, 2, 1)
 
-plt.plot(T, attitudes[:, 0], label="Yaw")
+plt.plot(T, attitudes[:, 0], label="Roll")
 plt.plot(T, attitudes[:, 1], label="Pitch")
-plt.plot(T, attitudes[:, 2], label="Roll")
+plt.plot(T, attitudes[:, 2], label="Yaw")
 
 plt.legend()
 
