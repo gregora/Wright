@@ -40,7 +40,7 @@ class Visualization:
         glShadeModel(GL_SMOOTH)
 
         # LOAD OBJECT AFTER PYGAME INIT
-        self.plane = OBJ("CAD/Chonkyv2.obj", swapyz=True)
+        self.plane = OBJ("CAD/Chonkyv2Simplified.obj", swapyz=True)
         self.plane.generate()
         
         self.ground = OBJ("CAD/ground.obj", swapyz=True)

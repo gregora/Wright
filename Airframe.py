@@ -111,7 +111,7 @@ class Airframe:
         
             force_b += drag_vector + lift_vector
 
-            torque_s = np.array([np.cross(surface["Position"][:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
+            torque_s = np.array([np.cross(surface["Position"][:, 0] - self.cm[:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
             
             torque_b += torque_s
 
@@ -136,13 +136,11 @@ class Airframe:
             force_b += motor["Thrust"] * np.array([[1], [0], [0]])
             torque_b += motor["Torque"] * np.array([[1], [0], [0]])
 
-            torque_b += np.array([np.cross(motor["Position"][:, 0], motor["Thrust"] * np.array([[1], [0], [0]])[:, 0])]).T
+            torque_b += np.array([np.cross(motor["Position"][:, 0] - self.cm[:, 0], motor["Thrust"] * np.array([[1], [0], [0]])[:, 0])]).T
         
 
         # force of gravity
         g_b = R.T @ self.g_i
-        torque_b += np.array([np.cross(self.cm[:, 0], self.m * g_b[:, 0])]).T
-
         force_b += self.m * g_b
 
 
@@ -156,8 +154,6 @@ class Airframe:
 
         #print(f"Torque in body frame: {torque_b.T}")
 
-        # because center of body is not in the center of mass, we have to take into account the acceleration of the center of mass 
-        torque_i = torque_i - np.array([np.cross(self.cm[:, 0], force_i[:, 0])]).T
         
         #print(f"Torque in inertial frame: {torque_i.T}")
 

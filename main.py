@@ -29,8 +29,6 @@ velocities = []
 
 commands = []
 
-airframe.x_i[2, 0] = -1.5
-
 airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
 airframe.v_i[2, 0] = -1
@@ -137,8 +135,8 @@ for i in tqdm.tqdm(range(N)):
         P_elev  = 0.0200     * 0.60
         D_elev  = 0.0040     * 0.60
 
-        aileron_request  = (eul[2, 0] -  0)*P_ailer + w_b[0, 0]*D_ailer
-        elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
+        #aileron_request  = (eul[2, 0] -  0)*P_ailer + w_b[0, 0]*D_ailer
+        #elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
 
         commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])
 
