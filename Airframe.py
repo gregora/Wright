@@ -74,7 +74,7 @@ class Airframe:
         for surface in self.surfaces.values():
 
             # calculate surface velocity
-            v_s = np.cross(w_b[:, 0], surface["Position"][:, 0])
+            v_s = np.cross(w_b[:, 0], surface["Position"][:, 0] - self.cm[:, 0])
             v_s = np.array([[v_s[0]], [v_s[1]], [v_s[2]]])
             v_s = v_s + v_b
 
@@ -86,6 +86,8 @@ class Airframe:
                 alpha_s, beta_s = beta_s, alpha_s
 
             alpha_s += surface["Angle"]
+
+            print(alpha_s)
 
             if surface["Type"] == "Symetric":
                 Cl, Cd = symetricC(alpha_s)
