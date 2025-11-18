@@ -31,7 +31,7 @@ commands = []
 
 airframe.v_i[0, 0] = 10
 airframe.v_i[1, 0] = 0
-airframe.v_i[2, 0] = -1
+airframe.v_i[2, 0] = 0
 
 # turn off the motor
 #airframe.motors["Motor"]["Thrust"] = 0
@@ -44,6 +44,8 @@ N = int(T / dt)
 
 elevator_request = 0
 aileron_request = 0
+
+paused = False
 
 for i in tqdm.tqdm(range(N)):
 
@@ -79,8 +81,10 @@ for i in tqdm.tqdm(range(N)):
     airframe.surfaces["Left Aileron"]["Angle"] -= d_aileron
     airframe.surfaces["Right Aileron"]["Angle"] += d_aileron
 
-
-    airframe.physics(dt)
+    if not paused:
+        airframe.physics(dt)
+    else:
+        i = 0
 
     if(np.isnan(airframe.attitude).any()):
         break
@@ -113,10 +117,14 @@ for i in tqdm.tqdm(range(N)):
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
             airframe.surfaces["Elevator"]["Angle"] = -0.60 / 2
 
+        if pygame.key.get_pressed()[pygame.K_SPACE]:
+            paused = not paused
+            time.sleep(0.3)
+
         eul, w_b = airframe.sensor_data()
 
         visualization.history.append(airframe.x_i.copy()[:,0])
-        visualization.update(i*dt, airframe.x_i, eul*180/pi)
+        visualization.update(i*dt, airframe.x_i, airframe.quaternion)
 
         eul = eul * 180 / pi
         w_b = w_b * 180 / pi
@@ -136,7 +144,7 @@ for i in tqdm.tqdm(range(N)):
         P_elev  = 0.0200     * 0.60
         D_elev  = 0.0040     * 0.60
 
-        #aileron_request  = (eul[0, 0] -  30)*P_ailer + w_b[0, 0]*D_ailer
+        aileron_request  = (eul[0, 0] -  30)*P_ailer + w_b[0, 0]*D_ailer
         #elevator_request = (eul[1, 0] -  4)*P_elev  + w_b[1, 0]*D_elev
 
         commands.append([airframe.surfaces["Left Aileron"]["Angle"], airframe.surfaces["Elevator"]["Angle"], airframe.surfaces["Rudder"]["Angle"]])

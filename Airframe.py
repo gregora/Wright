@@ -60,7 +60,7 @@ class Airframe:
 
     def physics(self, dt):
 
-        R = quat2R(self.quaternion).T
+        R = quat2R(self.quaternion)
 
         # THIS HAS TO BE R.T BECAUSE YOU NEED TO CALCULATE HOW VECTOR WOULD LOOK IN BODY FRAME
         # NOT HOW TO TRANSFORM THE VECTOR FROM INERTIAL TO BODY FRAME
@@ -80,97 +80,95 @@ class Airframe:
 
             # from surface velocity calculate local alpha and beta
             alpha_s = np.arctan2(v_s[2, 0], v_s[0, 0])
-            beta_s = np.arctan2(v_s[1, 0], v_s[0, 0])
+            beta_s =  np.arctan2(v_s[1, 0], v_s[0, 0])
 
             if surface["Vertical"]:
                 alpha_s, beta_s = beta_s, alpha_s
 
+            if "Angle" not in surface.keys():
+                surface["Angle"] = 0.0
+
+            alpha_s += surface["Angle"]
+
             if surface["Type"] == "Symetric":
-                Cl, Cd = symetricC(alpha_s + surface["Angle"])
+                Cl, Cd = symetricC(alpha_s)
             elif surface["Type"] == "Positive":
-                Cl, Cd = positiveC(alpha_s + surface["Angle"])
+                Cl, Cd = positiveC(alpha_s)
             elif surface["Type"] == "Negative":
-                Cl, Cd = negativeC(alpha_s + surface["Angle"])
+                Cl, Cd = negativeC(alpha_s)
 
             drag_vector = np.zeros((3, 1))
             lift_vector = np.zeros((3, 1))
-
 
             if not surface["Vertical"]:
                 lift = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[2, 0]**2) * surface["Area"] * Cl
                 drag = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[2, 0]**2) * surface["Area"] * Cd
 
-                drag_vector = -np.array([[cos(alpha_s)], [0], [-sin(alpha_s)]]) * drag
-                lift_vector =  np.array([[sin(alpha_s)], [0], [-cos(alpha_s)]]) * lift
+                drag_vector = -np.array([[ cos(alpha_s)], [0], [-sin(alpha_s)]]) * drag
+                lift_vector = -np.array([[ sin(alpha_s)], [0], [ cos(alpha_s)]]) * lift
+
 
             if surface["Vertical"]:
-                print(surface_name)
-                print(alpha_s)
-                print(beta_s)
                 lift = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[1, 0]**2) * surface["Area"] * Cl
                 drag = 0.5 * 1.225 * (v_s[0, 0]**2 + v_s[1, 0]**2) * surface["Area"] * Cd
 
-                drag_vector = -np.array([[cos(alpha_s)], [-sin(alpha_s)], [0]]) * drag
-                lift_vector =  np.array([[sin(alpha_s)], [cos(alpha_s)], [0]]) * lift
+                drag_vector = -np.array([[ cos(alpha_s)], [-sin(alpha_s)], [0]]) * drag
+                lift_vector = -np.array([[ sin(alpha_s)], [ cos(alpha_s)], [0]]) * lift
 
-        
+            #drag_vector = np.zeros((3, 1))
+            #lift_vector = np.zeros((3, 1))
+
             force_b += drag_vector + lift_vector
 
             torque_s = np.array([np.cross(surface["Position"][:, 0] - self.cm[:, 0], lift_vector[:, 0] + drag_vector[:, 0])]).T
             
             torque_b += torque_s
 
-            """
-            print(f"Surface: {surface['Name']}")
-            print(f"Alpha: {alpha_s}")
-            print(f"Beta: {beta_s}")
+            
+            print(f"Surface: {surface_name}")
+            print(f"Global velocity: {self.v_i.T}")
+            print(f"Local veloctiy: {v_b.T}")
+            print()
+
+            print(f"Alpha: {alpha_s * 180 / pi:.2f} deg")
+            print(f"w_i: {self.w_i.T}")
 
 
             print(f"Lift: {lift}")
             print(f"Drag: {drag}")
 
-            print(f"Drag Vector: {drag_vector}")
-            print(f"Lift Vector: {lift_vector}")
+            print(f"Drag Vector: {drag_vector.T}")
+            print(f"Lift Vector: {lift_vector.T}")
 
-            print(f"Torque: {torque_s}")
+            print(f"Torque: {torque_s.T}")
 
             print()
-            """
+            
 
         for motor in self.motors.values():
             force_b += motor["Thrust"] * np.array([[1], [0], [0]])
             torque_b += motor["Torque"] * np.array([[1], [0], [0]])
 
-
+        #exit()
         # force of gravity
         g_b = R.T @ self.g_i
         force_b += self.m * g_b
 
+        w_b += np.linalg.inv(self.I) @ (torque_b - np.cross(w_b[:, 0], (self.I @ w_b)[:, 0]).reshape((3, 1))) * dt
 
         force_i = R @ force_b
-        torque_i = R @ torque_b
 
-        I_c = R @ self.I @ R.T # first calculate where vector would be in body frame, multiply by I and transform back
-        L_c = I_c @ self.w_i
 
         a_i = force_i / self.m
 
-        #print(f"Torque in body frame: {torque_b.T}")
-
         
-        #print(f"Torque in inertial frame: {torque_i.T}")
-
-        
-        # calculate angular acceleration from torque 
-        alpha_i = np.linalg.inv(I_c) @ (torque_i - np.array([np.cross(self.w_i[:, 0], L_c[:, 0])]).T)
-
         #print(f"Angular acceleration in inertial frame: {alpha_i.T}")
 
-        self.v_i += a_i * dt
-        self.w_i += alpha_i * dt
+        self.v_i += a_i * dt        
+        self.w_i = R @ w_b
         
+        print(w_b)
 
-        
         self.x_i += self.v_i * dt
         self.attitude = R2ZYX(R)
         self.attitude = wrapToPi(self.attitude)

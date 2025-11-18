@@ -10,6 +10,7 @@ import numpy as np
 
 import cv2
 
+from misc import quat2R
 class Visualization:
 
     obj = None
@@ -59,7 +60,7 @@ class Visualization:
             self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             self.out = cv2.VideoWriter(filename, self.fourcc, fps, (int(viewport[0]),int(viewport[1])))
     
-    def update(self, t, x, euler, forces = []):        
+    def update(self, t, x, q, forces = []):        
         
         glClearColor(0.2, 0.4, 0.4, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -102,10 +103,17 @@ class Visualization:
 
         glTranslate(x[0, 0], -x[1, 0], -x[2, 0])
 
+        # rotate view by 90 degrees to match NED coordinate system
 
-        glRotate( euler[0], 1, 0, 0)
-        glRotate(-euler[1], 0, 1, 0)
-        glRotate(-euler[2] - 90, 0, 0, 1)
+        # gl rotate by quaternion
+        R = quat2R(q)
+        m = np.array([[R[0,0], R[0,1], R[0,2], 0],
+                      [R[1,0], R[1,1], R[1,2], 0],
+                      [R[2,0], R[2,1], R[2,2], 0],
+                      [0,       0,      0,     1]])
+        glMultMatrixf(m)
+        glRotate(-90, 0, 0, 1)
+
 
         self.plane.render()
 
