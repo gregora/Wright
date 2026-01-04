@@ -162,8 +162,8 @@ def parsePolarTxt(filename):
     return array
 
 
-NACA0006 = parsePolarTxt('Airfoils/xf-naca0006-il-1000000.txt')
-NACA2415 = parsePolarTxt('Airfoils/xf-naca2415-il-1000000.txt')
+NACA0006 = parsePolarTxt('Airfoils/xf-naca0006-il-100000.txt')
+NACA2415 = parsePolarTxt('Airfoils/xf-naca2415-il-100000.txt')
 
 # NACA 0006 airfoil
 def symetricC(alpha):
