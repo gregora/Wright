@@ -33,14 +33,14 @@
             "Vertical": false
         },
         "Left Aileron": {
-            "Position": [[0], [-0.45], [0]],
+            "Position": [[-0.245], [-0.45], [0]],
             "Area": 0.00625,
             "Type": "Symetric",
             "Angle": 0.00,
             "Vertical": false
         },
         "Right Aileron": {
-            "Position": [[0], [0.45], [0]],
+            "Position": [[-0.245], [0.45], [0]],
             "Area": 0.00625,
             "Type": "Symetric",
             "Angle": 0.0,
