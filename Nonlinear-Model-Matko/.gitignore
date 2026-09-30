@@ -1,0 +1,9 @@
+# Simulink generated files
+slprj/
+*.slxc
+*.autosave
+*.r20[0-9][0-9][ab]
+*.asv
+*.mexa64
+*.mexw64
+*.mexmaci64
