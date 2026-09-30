@@ -39,8 +39,10 @@ CD_param_vector_NACA0006 = [ ...
 
 % Surface positions
 
-xyz_wing = [-0.0207, 0, -0.016];
-S_wing = 0.2196;
+% Wing is modelled as two halves (left, right)
+xyz_wing_L = [-0.0207, -0.31, -0.016];
+xyz_wing_R = [-0.0207,  0.31, -0.016];
+S_wing = 0.2196/2;   % area of one half
 Alpha_0_wing = 0;
 Alpha_param_vector_wing = Alpha_param_vector_NACA2415;
 CL_param_vector_wing = CL_param_vector_NACA2415;
